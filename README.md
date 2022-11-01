@@ -6,17 +6,11 @@
     <img src="https://img.shields.io/badge/release-master-brightgreen.svg"/>
 </h1>
 
-Magician is a small HTTP service package based on Netty that makes it very easy to start an http service, and also supports WebSocket, using annotated configuration Handler.
-
-If you want to develop an http service with netty but find it cumbersome, then Magician may help you.
+Magician-scanning is a blockchain scanner that can easily scan transactions on the blockchain, and can monitor and process the balance of the specified address, account changes, and other events through simple configuration. It supports ETH, SOL, TRON three chains
 
 ## Running environment
 
-JDK11+
-
----
-
-The Jar package for the maven central library supports at least JDK11, but the source code can support at least jdk8, if you need to run on 8, you can download the latest tag and compile it yourself
+JDK8+
 
 ## Documentation
 

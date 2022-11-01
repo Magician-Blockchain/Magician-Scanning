@@ -1,7 +1,6 @@
 package com.blockchain.scanning;
 
 import com.blockchain.scanning.biz.scan.ScanService;
-import com.blockchain.scanning.biz.thread.EventThreadPool;
 import com.blockchain.scanning.commons.enums.ChainType;
 import com.blockchain.scanning.config.BlockChainConfig;
 import com.blockchain.scanning.config.EventConfig;
@@ -103,15 +102,6 @@ public class MagicianBlockchainScan {
      * @throws Exception
      */
     public void end() throws Exception {
-        end(true);
-    }
-
-    /**
-     * start a task, Can be set to execute automatically
-     * @param autoScan true automatic execution, false Manual execution, you need to call the scan methods in the ScanService class
-     * @throws Exception
-     */
-    public void end(boolean autoScan) throws Exception {
         if(blockChainConfig.getRpcUrl() == null || blockChainConfig.getRpcUrl().equals("")){
             throw new Exception("");
         }
@@ -132,16 +122,10 @@ public class MagicianBlockchainScan {
             throw new Exception("");
         }
 
-        /**
-         * initialization scanService
-         */
+        // initialization scanService
         scanService.init(blockChainConfig);
 
-        /**
-         * If automatic execution is set, execute the scan
-         */
-        if(autoScan){
-            scanService.start();
-        }
+        // execute the scan
+        scanService.start();
     }
 }

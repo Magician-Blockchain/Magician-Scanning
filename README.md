@@ -1,5 +1,5 @@
 <h1> 
-    <a href="https://magician-io.com">Magician</a> ·
+    <a href="https://magician-io.com">Magician-scanning</a> ·
     <img src="https://img.shields.io/badge/licenes-MIT-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/jdk-11+-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/maven-3.5.4+-brightgreen.svg"/>

@@ -16,7 +16,7 @@ public class EventThreadPool {
 
     /**
      * Initialize the thread pool
-     * @param corePoolSize
+     * @param corePoolSize Must >= number of tasks, recommended equal to number of tasks
      */
     public static void init(int corePoolSize) {
         if (threadPoolExecutor == null) {

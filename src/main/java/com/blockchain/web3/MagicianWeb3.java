@@ -5,7 +5,7 @@ import com.blockchain.web3.eth.EthBuilder;
 /**
  * Unified entry for all tool classes in this module
  */
-public class MagicianWeb3j {
+public class MagicianWeb3 {
 
     /**
      * Unified entry for all tools in the ETH module

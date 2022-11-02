@@ -17,8 +17,10 @@ public interface EthMonitorEvent {
     }
 
     /**
-     * The first ten digits of inputData, including 0x
-     * Only valid when tokenType is not equal to main chain currency
+     * abi signature of the function to filter (top ten of inputData)
+     *
+     * If you only want to monitor the transaction records of a certain function, you can set it in this method.
+     * If you do not want to monitor the specified function, you can not implement this method or return null
      * @return
      */
     default String functionCode(){
@@ -27,6 +29,9 @@ public interface EthMonitorEvent {
 
     /**
      * The from address in the transaction
+     *
+     * If you want to monitor the transaction records sent by a certain address,
+     * you can implement this method, otherwise you can not implement it or return null
      * @return
      */
     default String fromAddress(){
@@ -34,7 +39,10 @@ public interface EthMonitorEvent {
     }
 
     /**
-     * The to address in the transaction
+     * The address to receive the transaction
+     *
+     * If you want to monitor transactions received by an address,
+     * This method can be implemented, otherwise it cannot be implemented or returns null
      * @return
      */
     default String toAddress(){

@@ -1,12 +1,12 @@
 <h1> 
-    <a href="https://magician-io.com">Magician-scanning</a> ·
+    <a href="https://magician-io.com">Magician-web3</a> ·
     <img src="https://img.shields.io/badge/licenes-MIT-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/jdk-11+-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/maven-3.5.4+-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/release-master-brightgreen.svg"/>
 </h1>
 
-Magician-scanning is a blockchain scanner that can easily scan transactions on the blockchain, 
+Magician-web3 is a blockchain scanner that can easily scan transactions on the blockchain, 
 and can monitor and process the balance of the specified address, 
 account changes, and other events through simple configuration. It supports ETH, SOL, TRON three chains
 

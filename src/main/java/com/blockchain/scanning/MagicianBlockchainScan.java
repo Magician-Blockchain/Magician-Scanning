@@ -101,25 +101,25 @@ public class MagicianBlockchainScan {
      * start a task
      * @throws Exception
      */
-    public void end() throws Exception {
+    public void start() throws Exception {
         if(blockChainConfig.getRpcUrl() == null || blockChainConfig.getRpcUrl().equals("")){
-            throw new Exception("");
+            throw new Exception("rpcUrl cannot be empty");
         }
 
         if(blockChainConfig.getChainType() == null){
-            throw new Exception("");
+            throw new Exception("ChainType cannot be empty");
         }
 
         if(blockChainConfig.getScanPeriod() < 3000){
-            throw new Exception("");
+            throw new Exception("scanPeriod must be greater than 3000");
         }
 
         if(blockChainConfig.getScanSize() < 0){
-            throw new Exception("");
+            throw new Exception("scanSize must be greater than 0");
         }
 
-        if(EventConfig.getEthMonitorEvent() == null || EventConfig.getEthMonitorEvent().size() < 1){
-            throw new Exception("");
+        if(blockChainConfig.getChainType().equals(ChainType.ETH) && EventConfig.getEthMonitorEvent() == null || EventConfig.getEthMonitorEvent().size() < 1){
+            throw new Exception("You need to set up at least one monitor event");
         }
 
         // initialization scanService

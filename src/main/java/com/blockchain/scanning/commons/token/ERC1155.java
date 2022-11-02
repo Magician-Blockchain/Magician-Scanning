@@ -5,12 +5,12 @@ package com.blockchain.scanning.commons.token;
  */
 public enum ERC1155 {
 
-    BALANCE_OF("balanceOf", ""),
-    BALANCE_OF_BATCH("balanceOfBatch", ""),
-    SET_APPROVAL_FOR_ALL("setApprovalForAll", ""),
-    IS_APPROVAL_FOR_ALL("isApprovedForAll", ""),
-    SAFE_TRANSFER_FROM("safeTransferFrom", ""),
-    SAFE_BATCH_TRANSFER_FROM("safeBatchTransferFrom", "");
+    BALANCE_OF("balanceOf", null),
+    BALANCE_OF_BATCH("balanceOfBatch", null),
+    IS_APPROVAL_FOR_ALL("isApprovedForAll", null),
+    SET_APPROVAL_FOR_ALL("setApprovalForAll", "0xa22cb465"),
+    SAFE_TRANSFER_FROM("safeTransferFrom", "0xf242432a"),
+    SAFE_BATCH_TRANSFER_FROM("safeBatchTransferFrom", "0x2eb2c2d6");
 
     private String functionName;
 

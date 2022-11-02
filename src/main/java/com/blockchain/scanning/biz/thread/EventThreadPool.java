@@ -31,7 +31,7 @@ public class EventThreadPool {
      */
     public static void submit(Runnable runnable) throws Exception {
         if(threadPoolExecutor == null){
-            throw new Exception("");
+            throw new Exception("To perform scanning tasks, you need to initialize the thread pool first, you can call the EventThreadPool.init(1) method to initialize");
         }
         threadPoolExecutor.submit(runnable);
     }

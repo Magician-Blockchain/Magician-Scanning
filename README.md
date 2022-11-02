@@ -6,7 +6,9 @@
     <img src="https://img.shields.io/badge/release-master-brightgreen.svg"/>
 </h1>
 
-Magician-scanning is a blockchain scanner that can easily scan transactions on the blockchain, and can monitor and process the balance of the specified address, account changes, and other events through simple configuration. It supports ETH, SOL, TRON three chains
+Magician-scanning is a blockchain scanner that can easily scan transactions on the blockchain, 
+and can monitor and process the balance of the specified address, 
+account changes, and other events through simple configuration. It supports ETH, SOL, TRON three chains
 
 ## Running environment
 

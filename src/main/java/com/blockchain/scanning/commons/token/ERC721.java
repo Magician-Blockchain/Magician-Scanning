@@ -4,15 +4,15 @@ package com.blockchain.scanning.commons.token;
  * All functions of the ERC721 standard and the code corresponding to the function
  */
 public enum ERC721 {
-    OWNER_OF("ownerOf", ""),
-    BALANCE_OF("balanceOf", ""),
-    SAFE_TRANSFER_FROM("safeTransferFrom", ""),
-    SAFE_TRANSFER_FROM_TWO("safeTransferFrom", ""),
-    TRANSFER_FROM("transferFrom", ""),
-    APPROVE("approve", ""),
-    SET_APPROVAL_FOR_ALL("setApprovalForAll", ""),
-    GET_APPROVED("getApproved", ""),
-    IS_APPROVED_FOR_ALL("isApprovedForAll", ""),;
+    OWNER_OF("ownerOf", null),
+    BALANCE_OF("balanceOf", null),
+    GET_APPROVED("getApproved", null),
+    IS_APPROVED_FOR_ALL("isApprovedForAll", null),
+    SAFE_TRANSFER_FROM("safeTransferFrom", "0xb88d4fde"),
+    SAFE_TRANSFER_FROM_TWO("safeTransferFrom", "0x42842e0e"),
+    TRANSFER_FROM("transferFrom", "0x23b872dd"),
+    APPROVE("approve", "0x095ea7b3"),
+    SET_APPROVAL_FOR_ALL("setApprovalForAll", "0xa22cb465");
 
     private String functionName;
 

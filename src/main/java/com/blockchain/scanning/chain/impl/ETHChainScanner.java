@@ -7,6 +7,7 @@ import com.blockchain.scanning.commons.enums.TokenType;
 import com.blockchain.scanning.config.BlockChainConfig;
 import com.blockchain.scanning.config.EventConfig;
 import com.blockchain.scanning.monitor.EthMonitorEvent;
+import com.blockchain.scanning.monitor.filter.EthMonitorFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.protocol.Web3j;
@@ -115,25 +116,27 @@ public class ETHChainScanner extends ChainScanner {
         }
 
         for(EthMonitorEvent ethMonitorEvent : ethMonitorEventList){
-            if(ethMonitorEvent.fromAddress() != null
-                    && ethMonitorEvent.fromAddress().equals("") == false
-                    && ethMonitorEvent.fromAddress().toLowerCase().equals(transactionObject.getFrom().toLowerCase()) == false){
+            EthMonitorFilter ethMonitorFilter = ethMonitorEvent.ethMonitorFilter();
+
+            if(ethMonitorFilter.getFromAddress() != null
+                    && ethMonitorFilter.getFromAddress().equals("") == false
+                    && ethMonitorFilter.getFromAddress().toLowerCase().equals(transactionObject.getFrom().toLowerCase()) == false){
                 continue;
             }
 
-            if(ethMonitorEvent.toAddress() != null
-                    && ethMonitorEvent.toAddress().equals("") == false
-                    && ethMonitorEvent.toAddress().toLowerCase().equals(transactionObject.getTo().toLowerCase()) == false){
+            if(ethMonitorFilter.getToAddress() != null
+                    && ethMonitorFilter.getToAddress().equals("") == false
+                    && ethMonitorFilter.getToAddress().toLowerCase().equals(transactionObject.getTo().toLowerCase()) == false){
                 continue;
             }
 
-            if(ethMonitorEvent.tokenType().equals(TokenType.MAIN_CHAIN_COINS) == false) {
-                if(transactionObject.getTo().toLowerCase().equals(ethMonitorEvent.contractAddress().toLowerCase()) == false){
+            if(ethMonitorFilter.getTokenType().equals(TokenType.MAIN_CHAIN_COINS) == false) {
+                if(transactionObject.getTo().toLowerCase().equals(ethMonitorFilter.getContractAddress().toLowerCase()) == false){
                     continue;
                 }
 
                 if(transactionObject.getInput().length() < 10
-                        || transactionObject.getInput().substring(0, 10).toLowerCase().equals(ethMonitorEvent.functionCode().toLowerCase()) == false){
+                        || transactionObject.getInput().substring(0, 10).toLowerCase().equals(ethMonitorFilter.getFunctionCode().toLowerCase()) == false){
                     continue;
                 }
             }

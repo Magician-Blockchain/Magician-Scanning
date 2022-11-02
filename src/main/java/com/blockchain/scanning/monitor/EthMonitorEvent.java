@@ -1,7 +1,6 @@
 package com.blockchain.scanning.monitor;
 
 import com.blockchain.scanning.chain.model.TransactionModel;
-import com.blockchain.scanning.commons.enums.TokenType;
 import com.blockchain.scanning.monitor.filter.EthMonitorFilter;
 
 /**

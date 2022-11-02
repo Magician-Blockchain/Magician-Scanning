@@ -48,59 +48,17 @@ Create a MonitorEvent
 public class EthMonitorEventImpl implements EthMonitorEvent {
 
     /**
-     * ERC20, ERC721, main chain coin, etc.
-     * must be set
-     * @return
-     */
-    @Override
-    public TokenType tokenType() {
-        return EthMonitorEvent.super.tokenType();
-    }
-
-    /**
-     * abi signature of the function to filter (top ten of inputData)
+     * set filters
      *
-     * If you only want to monitor the transaction records of a certain function,
-     * you can set it in this method.
-     * If you do not want to monitor the specified function, you can not implement this method or return null
+     * When a qualified transaction is scanned, the call method will be triggered
      * @return
      */
     @Override
-    public String functionCode() {
-        return EthMonitorEvent.super.functionCode();
-    }
-
-    /**
-     * The from address in the transaction
-     *
-     * If you want to monitor the transaction records sent by a certain address,
-     * you can implement this method, otherwise you can not implement it or return null
-     * @return
-     */
-    @Override
-    public String fromAddress() {
-        return EthMonitorEvent.super.fromAddress();
-    }
-
-    /**
-     * The address to receive the transaction
-     *
-     * If you want to monitor transactions received by an address,
-     * This method can be implemented, otherwise it cannot be implemented or returns null
-     * @return
-     */
-    @Override
-    public String toAddress() {
-        return EthMonitorEvent.super.toAddress();
-    }
-
-    /**
-     * The contract address, if it is a transaction calling the contract, then it is the same as toAddress
-     * @return
-     */
-    @Override
-    public String contractAddress() {
-        return EthMonitorEvent.super.contractAddress();
+    public EthMonitorFilter ethMonitorFilter() {
+        return EthMonitorFilter.builder()
+                .setTokenType(TokenType.ERC20)
+                .setContractAddress("0xasdasdasdasdasdasdasdasdas")
+                .setFunctionCode("0x1s8d5j6j");
     }
 
     /**

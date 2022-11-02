@@ -10,7 +10,9 @@ import com.blockchain.scanning.monitor.filter.EthMonitorFilter;
 public interface EthMonitorEvent {
 
     /**
-     * ethMonitorFilter
+     * Monitor filter
+     *
+     * When a qualified transaction is scanned, the call method will be triggered
      * @return
      */
     default EthMonitorFilter ethMonitorFilter(){

@@ -40,39 +40,44 @@ public class EthMonitorFilter {
         return tokenType;
     }
 
-    public void setTokenType(TokenType tokenType) {
+    public EthMonitorFilter setTokenType(TokenType tokenType) {
         this.tokenType = tokenType;
+        return this;
     }
 
     public String getFunctionCode() {
         return functionCode;
     }
 
-    public void setFunctionCode(String functionCode) {
+    public EthMonitorFilter setFunctionCode(String functionCode) {
         this.functionCode = functionCode;
+        return this;
     }
 
     public String getFromAddress() {
         return fromAddress;
     }
 
-    public void setFromAddress(String fromAddress) {
+    public EthMonitorFilter setFromAddress(String fromAddress) {
         this.fromAddress = fromAddress;
+        return this;
     }
 
     public String getToAddress() {
         return toAddress;
     }
 
-    public void setToAddress(String toAddress) {
+    public EthMonitorFilter setToAddress(String toAddress) {
         this.toAddress = toAddress;
+        return this;
     }
 
     public String getContractAddress() {
         return contractAddress;
     }
 
-    public void setContractAddress(String contractAddress) {
+    public EthMonitorFilter setContractAddress(String contractAddress) {
         this.contractAddress = contractAddress;
+        return this;
     }
 }

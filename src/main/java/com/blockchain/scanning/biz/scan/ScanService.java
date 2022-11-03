@@ -47,19 +47,12 @@ public class ScanService {
      * Start automatic scan
      * @throws Exception
      */
-    public void start() throws Exception {
+    public void start() {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                scan();
+                chainScanner.scanStart();
             }
         }, new Date(), blockChainConfig.getScanPeriod());
-    }
-
-    /**
-     * Execute the scan logic, if you want to scan manually, you can call this method according to your own needs and frequency
-     */
-    public void scan(){
-        chainScanner.scanStart();
     }
 }

@@ -37,11 +37,6 @@ public class ETHChainScanner extends ChainScanner {
     private List<EthMonitorEvent> ethMonitorEventList = EventConfig.getEthMonitorEvent();
 
     /**
-     * Listen for all transaction events
-     */
-    private EthMonitorEvent monitorAllTransactionEvent = EventConfig.getEthMonitorAllTransactionEvent();
-
-    /**
      * Initialize all member variables
      *
      * @param blockChainConfig
@@ -114,42 +109,40 @@ public class ETHChainScanner extends ChainScanner {
     public void call(TransactionModel transactionModel) {
         EthBlock.TransactionObject transactionObject = transactionModel.getEthTransactionModel();
 
-        if (monitorAllTransactionEvent != null) {
-            monitorAllTransactionEvent.call(transactionModel);
-        }
-
         for (EthMonitorEvent ethMonitorEvent : ethMonitorEventList) {
             EthMonitorFilter ethMonitorFilter = ethMonitorEvent.ethMonitorFilter();
 
-            if (ethMonitorFilter.getFromAddress() != null
-                    && ethMonitorFilter.getFromAddress().equals("") == false
-                    && ethMonitorFilter.getFromAddress().equals(transactionObject.getFrom().toLowerCase()) == false) {
-                continue;
-            }
-
-            if (ethMonitorFilter.getToAddress() != null
-                    && ethMonitorFilter.getToAddress().equals("") == false
-                    && ethMonitorFilter.getToAddress().equals(transactionObject.getTo().toLowerCase()) == false) {
-                continue;
-            }
-
-            if(ethMonitorFilter.getMinValue() != null
-                && ethMonitorFilter.getMinValue().compareTo(transactionModel.getEthTransactionModel().getValue()) > 0){
-                continue;
-            }
-
-            if(ethMonitorFilter.getMaxValue() != null
-                    && ethMonitorFilter.getMaxValue().compareTo(transactionModel.getEthTransactionModel().getValue()) < 0){
-                continue;
-            }
-
-            if(ethMonitorFilter.getFunctionCode() != null && ethMonitorFilter.getFunctionCode().equals("") == false){
-                if (transactionObject.getInput().length() < 10) {
+            if(ethMonitorEvent != null) {
+                if (ethMonitorFilter.getFromAddress() != null
+                        && ethMonitorFilter.getFromAddress().equals("") == false
+                        && ethMonitorFilter.getFromAddress().equals(transactionObject.getFrom().toLowerCase()) == false) {
                     continue;
                 }
 
-                if(ethMonitorFilter.getFunctionCode().equals(transactionObject.getInput().substring(0, 10).toLowerCase()) == false){
+                if (ethMonitorFilter.getToAddress() != null
+                        && ethMonitorFilter.getToAddress().equals("") == false
+                        && ethMonitorFilter.getToAddress().equals(transactionObject.getTo().toLowerCase()) == false) {
                     continue;
+                }
+
+                if (ethMonitorFilter.getMinValue() != null
+                        && ethMonitorFilter.getMinValue().compareTo(transactionModel.getEthTransactionModel().getValue()) > 0) {
+                    continue;
+                }
+
+                if (ethMonitorFilter.getMaxValue() != null
+                        && ethMonitorFilter.getMaxValue().compareTo(transactionModel.getEthTransactionModel().getValue()) < 0) {
+                    continue;
+                }
+
+                if (ethMonitorFilter.getFunctionCode() != null && ethMonitorFilter.getFunctionCode().equals("") == false) {
+                    if (transactionObject.getInput().length() < 10) {
+                        continue;
+                    }
+
+                    if (transactionObject.getInput().toLowerCase().startsWith(ethMonitorFilter.getFunctionCode())) {
+                        continue;
+                    }
                 }
             }
 

@@ -15,11 +15,6 @@ public class EventConfig {
      */
     private static List<EthMonitorEvent> ethMonitorEvent = new ArrayList<>();
 
-    /**
-     * ETH monitoring event (any transaction on the chain will be triggered, no conditional filtering)
-     */
-    private static EthMonitorEvent ethMonitorAllTransactionEvent;
-
     public static List<EthMonitorEvent> getEthMonitorEvent() {
         return ethMonitorEvent;
     }
@@ -28,11 +23,4 @@ public class EventConfig {
         EventConfig.ethMonitorEvent.add(ethMonitorEvent);
     }
 
-    public static EthMonitorEvent getEthMonitorAllTransactionEvent() {
-        return ethMonitorAllTransactionEvent;
-    }
-
-    public static void setEthMonitorAllTransactionEvent(EthMonitorEvent ethMonitorAllTransactionEvent) {
-        EventConfig.ethMonitorAllTransactionEvent = ethMonitorAllTransactionEvent;
-    }
 }

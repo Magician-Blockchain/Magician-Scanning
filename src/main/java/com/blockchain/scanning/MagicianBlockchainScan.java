@@ -88,16 +88,6 @@ public class MagicianBlockchainScan {
     }
 
     /**
-     * Add ETH monitoring event (any transaction on the chain will be triggered, no conditional filtering)
-     * @param monitorAllTransactionEvent
-     * @return
-     */
-    public MagicianBlockchainScan setEthMonitorAllTransactionEvent(EthMonitorEvent monitorAllTransactionEvent) {
-        EventConfig.setEthMonitorAllTransactionEvent(monitorAllTransactionEvent);
-        return this;
-    }
-
-    /**
      * start a task
      * @throws Exception
      */

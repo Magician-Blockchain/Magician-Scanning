@@ -3,7 +3,6 @@ package com.blockchain.scanning.chain.impl;
 import com.blockchain.scanning.biz.thread.EventQueue;
 import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.model.TransactionModel;
-import com.blockchain.scanning.commons.enums.TokenType;
 import com.blockchain.scanning.config.BlockChainConfig;
 import com.blockchain.scanning.config.EventConfig;
 import com.blockchain.scanning.monitor.EthMonitorEvent;

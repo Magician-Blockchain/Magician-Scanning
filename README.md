@@ -42,6 +42,8 @@ JDK8+
 Create a MonitorEvent
 
 ```java
+import java.math.BigInteger;
+
 /**
  * Create an implementation class for EthMonitorEvent
  */
@@ -56,8 +58,8 @@ public class EthMonitorEventImpl implements EthMonitorEvent {
     @Override
     public EthMonitorFilter ethMonitorFilter() {
         return EthMonitorFilter.builder()
-                .setTokenType(TokenType.ERC20)
-                .setContractAddress("0xasdasdasdasdasdasdasdasdas")
+                .setMinValue(BigInteger.valueOf(100))
+                .setToAddress("0xasdasdasdasdasdasdasdasdas")
                 .setFunctionCode("0x1s8d5j6j");
     }
 

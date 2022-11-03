@@ -43,11 +43,12 @@ public class ETHChainScanner extends ChainScanner {
 
     /**
      * Initialize all member variables
+     *
      * @param blockChainConfig
      * @param eventQueue
      */
     @Override
-    public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue){
+    public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue) {
         super.init(blockChainConfig, eventQueue);
 
         web3j = Web3j.build(new HttpService(blockChainConfig.getRpcUrl()));
@@ -55,6 +56,7 @@ public class ETHChainScanner extends ChainScanner {
 
     /**
      * scan block
+     *
      * @param beginBlockNumber
      * @param endBlockNumber
      */
@@ -63,12 +65,12 @@ public class ETHChainScanner extends ChainScanner {
         try {
             BigInteger blockNumber = web3j.ethBlockNumber().send().getBlockNumber();
 
-            if(beginBlockNumber.compareTo(blockNumber) > 0){
+            if (beginBlockNumber.compareTo(blockNumber) > 0) {
                 logger.error("The starting block height has exceeded the current maximum block height, please reset");
                 return;
             }
 
-            if(endBlockNumber.compareTo(blockNumber) > 0){
+            if (endBlockNumber.compareTo(blockNumber) > 0) {
                 endBlockNumber = blockNumber;
             }
 
@@ -76,18 +78,18 @@ public class ETHChainScanner extends ChainScanner {
                 blockChainConfig.setBeginBlockNumber(i);
 
                 EthBlock block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(i), true).send();
-                if(block == null || block.getBlock() == null){
+                if (block == null || block.getBlock() == null) {
                     continue;
                 }
 
                 List<TransactionModel> transactionList = new ArrayList<>();
 
                 List<EthBlock.TransactionResult> transactionResultList = block.getBlock().getTransactions();
-                if(transactionResultList == null || transactionResultList.size() < 1){
+                if (transactionResultList == null || transactionResultList.size() < 1) {
                     continue;
                 }
 
-                for(EthBlock.TransactionResult<EthBlock.TransactionObject> transactionResult : transactionResultList){
+                for (EthBlock.TransactionResult<EthBlock.TransactionObject> transactionResult : transactionResultList) {
 
                     EthBlock.TransactionObject transactionObject = transactionResult.get();
 
@@ -98,45 +100,55 @@ public class ETHChainScanner extends ChainScanner {
 
                 eventQueue.add(transactionList);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error("An exception occurred while scanning", e);
         }
     }
 
     /**
      * Process the scanned transaction data and perform monitoring events on demand
+     *
      * @param transactionModel
      */
     @Override
     public void call(TransactionModel transactionModel) {
         EthBlock.TransactionObject transactionObject = transactionModel.getEthTransactionModel();
 
-        if(monitorAllTransactionEvent != null){
+        if (monitorAllTransactionEvent != null) {
             monitorAllTransactionEvent.call(transactionModel);
         }
 
-        for(EthMonitorEvent ethMonitorEvent : ethMonitorEventList){
+        for (EthMonitorEvent ethMonitorEvent : ethMonitorEventList) {
             EthMonitorFilter ethMonitorFilter = ethMonitorEvent.ethMonitorFilter();
 
-            if(ethMonitorFilter.getFromAddress() != null
+            if (ethMonitorFilter.getFromAddress() != null
                     && ethMonitorFilter.getFromAddress().equals("") == false
-                    && ethMonitorFilter.getFromAddress().toLowerCase().equals(transactionObject.getFrom().toLowerCase()) == false){
+                    && ethMonitorFilter.getFromAddress().equals(transactionObject.getFrom().toLowerCase()) == false) {
                 continue;
             }
 
-            if(ethMonitorFilter.getToAddress() != null
+            if (ethMonitorFilter.getToAddress() != null
                     && ethMonitorFilter.getToAddress().equals("") == false
-                    && ethMonitorFilter.getToAddress().toLowerCase().equals(transactionObject.getTo().toLowerCase()) == false){
+                    && ethMonitorFilter.getToAddress().equals(transactionObject.getTo().toLowerCase()) == false) {
                 continue;
             }
 
-            if(ethMonitorFilter.getTokenType().equals(TokenType.MAIN_CHAIN_COINS) == false) {
-                if(transactionObject.getTo().toLowerCase().equals(ethMonitorFilter.getContractAddress().toLowerCase()) == false){
+            if(ethMonitorFilter.getMinValue() != null
+                && ethMonitorFilter.getMinValue().compareTo(transactionModel.getEthTransactionModel().getValue()) > 0){
+                continue;
+            }
+
+            if(ethMonitorFilter.getMaxValue() != null
+                    && ethMonitorFilter.getMaxValue().compareTo(transactionModel.getEthTransactionModel().getValue()) < 0){
+                continue;
+            }
+
+            if(ethMonitorFilter.getFunctionCode() != null && ethMonitorFilter.getFunctionCode().equals("") == false){
+                if (transactionObject.getInput().length() < 10) {
                     continue;
                 }
 
-                if(transactionObject.getInput().length() < 10
-                        || transactionObject.getInput().substring(0, 10).toLowerCase().equals(ethMonitorFilter.getFunctionCode().toLowerCase()) == false){
+                if(ethMonitorFilter.getFunctionCode().equals(transactionObject.getInput().substring(0, 10).toLowerCase()) == false){
                     continue;
                 }
             }

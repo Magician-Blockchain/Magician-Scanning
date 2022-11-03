@@ -1,16 +1,11 @@
 package com.blockchain.scanning.monitor.filter;
 
-import com.blockchain.scanning.commons.enums.TokenType;
+import java.math.BigInteger;
 
 /**
  * Monitor filter
  */
 public class EthMonitorFilter {
-
-    /**
-     * Token Type
-     */
-    private TokenType tokenType;
 
     /**
      * abi signature of the function to filter (top ten of inputData)
@@ -28,25 +23,28 @@ public class EthMonitorFilter {
     private String toAddress;
 
     /**
-     * The contract address, if it is a transaction calling the contract, then it is the same as toAddress
+     * Amount of main chain coins sent
+     *
+     * If set, filter out >= its
      */
-    private String contractAddress;
+    private BigInteger minValue;
+
+    /**
+     * Amount of main chain coins sent
+     *
+     * If set, filter out <= its
+     */
+    private BigInteger maxValue;
 
     public static EthMonitorFilter builder(){
         return new EthMonitorFilter();
     }
 
-    public TokenType getTokenType() {
-        return tokenType;
-    }
-
-    public EthMonitorFilter setTokenType(TokenType tokenType) {
-        this.tokenType = tokenType;
-        return this;
-    }
-
     public String getFunctionCode() {
-        return functionCode;
+        if(functionCode != null){
+            return functionCode.toLowerCase();
+        }
+        return null;
     }
 
     public EthMonitorFilter setFunctionCode(String functionCode) {
@@ -55,7 +53,10 @@ public class EthMonitorFilter {
     }
 
     public String getFromAddress() {
-        return fromAddress;
+        if(fromAddress != null){
+            return fromAddress.toLowerCase();
+        }
+        return null;
     }
 
     public EthMonitorFilter setFromAddress(String fromAddress) {
@@ -64,7 +65,10 @@ public class EthMonitorFilter {
     }
 
     public String getToAddress() {
-        return toAddress;
+        if(toAddress != null){
+            return toAddress.toLowerCase();
+        }
+        return null;
     }
 
     public EthMonitorFilter setToAddress(String toAddress) {
@@ -72,12 +76,19 @@ public class EthMonitorFilter {
         return this;
     }
 
-    public String getContractAddress() {
-        return contractAddress;
+    public BigInteger getMinValue() {
+        return minValue;
     }
 
-    public EthMonitorFilter setContractAddress(String contractAddress) {
-        this.contractAddress = contractAddress;
-        return this;
+    public void setMinValue(BigInteger minValue) {
+        this.minValue = minValue;
+    }
+
+    public BigInteger getMaxValue() {
+        return maxValue;
+    }
+
+    public void setMaxValue(BigInteger maxValue) {
+        this.maxValue = maxValue;
     }
 }

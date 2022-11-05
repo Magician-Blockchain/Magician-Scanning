@@ -118,7 +118,7 @@ List<Type> result = ethAbiCodec.decoderInputData("0xasdasdas00000000adasd",
     new TypeReference<Utf8String>(){}
 );
 
-// ------------------------ More, if you are interested, you can visit the official website----------------------
+// ------------------------ More, if you are interested, you can visit our official website for more information ----------------------
 
 Web3j web3j = Web3j.build(new HttpService(""));
 String privateKey = "";

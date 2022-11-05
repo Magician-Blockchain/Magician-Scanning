@@ -5,5 +5,5 @@ package com.blockchain.scanning.commons.enums;
  */
 public enum TokenType {
 
-    ERC20, ERC1155, ERC721, MAIN_CHAIN_COINS
+    ERC20, ERC1155, ERC721, COINS
 }

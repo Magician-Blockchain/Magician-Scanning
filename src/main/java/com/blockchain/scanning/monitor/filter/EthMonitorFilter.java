@@ -23,14 +23,14 @@ public class EthMonitorFilter {
     private String toAddress;
 
     /**
-     * Amount of main chain coins sent
+     * Amount of coins sent
      *
      * If set, filter out >= its
      */
     private BigInteger minValue;
 
     /**
-     * Amount of main chain coins sent
+     * Amount of coins sent
      *
      * If set, filter out <= its
      */

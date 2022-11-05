@@ -52,7 +52,7 @@ public class EthMonitorEventImpl implements EthMonitorEvent {
     /**
      * set filters
      *
-     * When a qualified transaction is scanned, the call method will be triggered
+     * Filter the transaction records according to these conditions and trigger the call method
      * @return
      */
     @Override
@@ -64,12 +64,12 @@ public class EthMonitorEventImpl implements EthMonitorEvent {
     }
 
     /**
-     * Filter the transaction data according to the above conditions, and execute the monitoring event
+     * This method is triggered when a transaction matching the above filter criteria is encountered
      * @param transactionModel
      */
     @Override
     public void call(TransactionModel transactionModel) {
-
+        
     }
 }
 ```
@@ -77,22 +77,20 @@ public class EthMonitorEventImpl implements EthMonitorEvent {
 Start a monitoring task
 
 ```java
-// Set the number of threads to be consistent with the number of tasks
+// Initialize the thread pool, the number of core threads must be >= the number of chains you want to scan, it is recommended to equal the number of chains to be scanned
 EventThreadPool.init(1);
 
-// Start a scan task
-// If you want to open multiple scanning tasks, 
-// you can execute this code multiple times. 
-// If you want to scan multiple chains at the same time, 
-// you can do the same operation, 
-// but you need to modify the ChainType to the name of the corresponding chain
+// Open a scan task, if you want to scan multiple chains, you can open multiple tasks, 
+// by copying the following code and modifying the corresponding configuration you can open a new task
 MagicianBlockchainScan.create()
-        .setRpcUrl("https://bsc-dataseed.binance.org/")
+        .setRpcUrl("https://data-seed-prebsc-1-s1.binance.org:8545/")
         .setChainType(ChainType.ETH)
-        .setScanSize(1000)
         .setScanPeriod(5000)
-        .setBeginBlockNumber(BigInteger.valueOf(1))
-        .addEthMonitorEvent(new EthMonitorEventImpl())
+        .setScanSize(1000)
+        .setBeginBlockNumber(BigInteger.valueOf(24318610))
+        .addEthMonitorEvent(new EventOne())
+        .addEthMonitorEvent(new EventThree())
+        .addEthMonitorEvent(new EventTwo())
         .start();
 ```
 
@@ -120,12 +118,12 @@ List<Type> result = ethAbiCodec.decoderInputData("0xasdasdas00000000adasd",
     new TypeReference<Utf8String>(){}
 );
 
-// ------------------------ more ----------------------
+// ------------------------ More, if you are interested, you can visit the official website----------------------
 
 Web3j web3j = Web3j.build(new HttpService(""));
+String privateKey = "";
 
-// If you are interested, you can visit the official website
-EthHelper ethHelper = MagicianWeb3.getEthBuilder().getEth(web3j, "private key");
+EthHelper ethHelper = MagicianWeb3.getEthBuilder().getEth(web3j, privateKey);
 
 BigInteger amount = ethHelper.balanceOf(fromAddress);
 
@@ -134,9 +132,8 @@ ethHelper.transfer(
         BigDecimal.valueOf(1),
         Convert.Unit.ETHER
 );
-        
-// If you are interested, you can visit the official website
-EthContract ethContract = MagicianWeb3.getEthBuilder().getEthContract(web3j, "private key");
+
+EthContract ethContract = MagicianWeb3.getEthBuilder().getEthContract(web3j, privateKey);
 
 List<Type> result =  ethContract.select(
         contractAddress,

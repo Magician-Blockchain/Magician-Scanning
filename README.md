@@ -127,6 +127,34 @@ Web3j web3j = Web3j.build(new HttpService(""));
 // If you are interested, you can visit the official website
 EthHelper ethHelper = MagicianWeb3.getEthBuilder().getEth(web3j, "private key");
 
+BigInteger amount = ethHelper.balanceOf(fromAddress);
+
+ethHelper.transfer(
+        toAddress,
+        BigDecimal.valueOf(1),
+        Convert.Unit.ETHER
+);
+        
 // If you are interested, you can visit the official website
 EthContract ethContract = MagicianWeb3.getEthBuilder().getEthContract(web3j, "private key");
+
+List<Type> result =  ethContract.select(
+        contractAddress,
+        ethAbiCodec.getInputData(
+        "balanceOf",
+        new Address(toAddress)),
+        new TypeReference<Uint256>() {}
+);
+
+System.out.println(result.get(0).getValue());
+
+ethContract.sendRawTransaction(
+        fromAddress,
+        contractAddress,
+        ethAbiCodec.getInputData(
+            "transfer",
+            new Address(toAddress),
+            new Uint256(new BigInteger("1000000000000000000"))
+        )
+);
 ```

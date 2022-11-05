@@ -1,8 +1,10 @@
 package com.blockchain.scanning.chain.impl;
 
 import com.blockchain.scanning.biz.thread.EventQueue;
+import com.blockchain.scanning.biz.thread.model.EventModel;
 import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.model.TransactionModel;
+import com.blockchain.scanning.commons.util.StringUtil;
 import com.blockchain.scanning.config.BlockChainConfig;
 import com.blockchain.scanning.config.EventConfig;
 import com.blockchain.scanning.monitor.EthMonitorEvent;
@@ -69,19 +71,23 @@ public class ETHChainScanner extends ChainScanner {
             }
 
             for (BigInteger i = beginBlockNumber; i.compareTo(endBlockNumber) <= 0; i = i.add(BigInteger.ONE)) {
-                blockChainConfig.setBeginBlockNumber(i);
+                blockChainConfig.setBeginBlockNumber(i.add(BigInteger.ONE));
 
                 EthBlock block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(i), true).send();
                 if (block == null || block.getBlock() == null) {
+                    // prevent the frequency from being too fast
+                    Thread.sleep(500);
+                    continue;
+                }
+
+                List<EthBlock.TransactionResult> transactionResultList = block.getBlock().getTransactions();
+                if (transactionResultList == null || transactionResultList.size() < 1) {
+                    // prevent the frequency from being too fast
+                    Thread.sleep(500);
                     continue;
                 }
 
                 List<TransactionModel> transactionList = new ArrayList<>();
-
-                List<EthBlock.TransactionResult> transactionResultList = block.getBlock().getTransactions();
-                if (transactionResultList == null || transactionResultList.size() < 1) {
-                    continue;
-                }
 
                 for (EthBlock.TransactionResult<EthBlock.TransactionObject> transactionResult : transactionResultList) {
 
@@ -92,7 +98,13 @@ public class ETHChainScanner extends ChainScanner {
                     );
                 }
 
-                eventQueue.add(transactionList);
+                eventQueue.add(EventModel.builder()
+                        .setCurrentBlockHeight(i)
+                        .setTransactionModels(transactionList)
+                );
+
+                // prevent the frequency from being too fast
+                Thread.sleep(500);
             }
         } catch (Exception e) {
             logger.error("An exception occurred while scanning", e);
@@ -111,17 +123,22 @@ public class ETHChainScanner extends ChainScanner {
         for (EthMonitorEvent ethMonitorEvent : ethMonitorEventList) {
             EthMonitorFilter ethMonitorFilter = ethMonitorEvent.ethMonitorFilter();
 
-            if(ethMonitorEvent != null) {
-                if (ethMonitorFilter.getFromAddress() != null
-                        && ethMonitorFilter.getFromAddress().equals("") == false
-                        && ethMonitorFilter.getFromAddress().equals(transactionObject.getFrom().toLowerCase()) == false) {
-                    continue;
+            if(ethMonitorFilter != null) {
+
+                if (transactionModel.getEthTransactionModel().getValue() == null) {
+                    transactionModel.getEthTransactionModel().setValue("0");
                 }
 
-                if (ethMonitorFilter.getToAddress() != null
-                        && ethMonitorFilter.getToAddress().equals("") == false
-                        && ethMonitorFilter.getToAddress().equals(transactionObject.getTo().toLowerCase()) == false) {
-                    continue;
+                if (StringUtil.isNotEmpty(ethMonitorFilter.getFromAddress())){
+                    if (StringUtil.isEmpty(transactionObject.getFrom()) || ethMonitorFilter.getFromAddress().equals(transactionObject.getFrom().toLowerCase()) == false) {
+                        continue;
+                    }
+                }
+
+                if(StringUtil.isNotEmpty(ethMonitorFilter.getToAddress())) {
+                    if (StringUtil.isEmpty(transactionObject.getTo()) || ethMonitorFilter.getToAddress().equals(transactionObject.getTo().toLowerCase()) == false) {
+                        continue;
+                    }
                 }
 
                 if (ethMonitorFilter.getMinValue() != null
@@ -134,12 +151,16 @@ public class ETHChainScanner extends ChainScanner {
                     continue;
                 }
 
-                if (ethMonitorFilter.getFunctionCode() != null && ethMonitorFilter.getFunctionCode().equals("") == false) {
-                    if (transactionObject.getInput().length() < 10) {
+                if (StringUtil.isNotEmpty(ethMonitorFilter.getFunctionCode())) {
+                    if (StringUtil.isEmpty(transactionObject.getInput()) || transactionObject.getInput().length() < 10) {
                         continue;
                     }
 
-                    if (transactionObject.getInput().toLowerCase().startsWith(ethMonitorFilter.getFunctionCode())) {
+                    if(transactionObject.getInput().toLowerCase().startsWith("0x") == false){
+                        transactionObject.setInput("0x" + transactionObject.getInput());
+                    }
+
+                    if (transactionObject.getInput().toLowerCase().startsWith(ethMonitorFilter.getFunctionCode()) == false) {
                         continue;
                     }
                 }

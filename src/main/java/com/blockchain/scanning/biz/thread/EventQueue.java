@@ -1,5 +1,6 @@
 package com.blockchain.scanning.biz.thread;
 
+import com.blockchain.scanning.biz.thread.model.EventModel;
 import com.blockchain.scanning.chain.model.TransactionModel;
 
 import java.util.List;
@@ -13,13 +14,13 @@ public class EventQueue {
     /**
      * Event queue
      */
-    private LinkedBlockingQueue<List<TransactionModel>> linkedBlockingQueue = new LinkedBlockingQueue<>();
+    private LinkedBlockingQueue<EventModel> linkedBlockingQueue = new LinkedBlockingQueue<>();
 
-    public LinkedBlockingQueue<List<TransactionModel>> getLinkedBlockingQueue() {
+    public LinkedBlockingQueue<EventModel> getLinkedBlockingQueue() {
         return linkedBlockingQueue;
     }
 
-    public void add(List<TransactionModel> transactionModelList){
-        linkedBlockingQueue.add(transactionModelList);
+    public void add(EventModel eventModel){
+        linkedBlockingQueue.add(eventModel);
     }
 }

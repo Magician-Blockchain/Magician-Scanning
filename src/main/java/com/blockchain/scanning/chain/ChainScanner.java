@@ -30,14 +30,14 @@ public abstract class ChainScanner {
      * start scanning
      */
     public void scanStart() {
-        logger.info("start scanning, chainType: {}.....", blockChainConfig.getChainType().toString());
+        logger.info("start scanning, chainType: {}, beginBlockNumber: {}", blockChainConfig.getChainType().toString(), blockChainConfig.getBeginBlockNumber());
 
         try {
             BigInteger endBlockNumber = blockChainConfig.getBeginBlockNumber().add(BigInteger.valueOf(blockChainConfig.getScanSize()));
 
             scan(blockChainConfig.getBeginBlockNumber(), endBlockNumber);
         } catch (Exception e){
-            logger.error("An exception occurred while scanning, chainType: {}.....", blockChainConfig.getChainType().toString(), e);
+            logger.error("An exception occurred while scanning, chainType: {}, beginBlockNumber: {}", blockChainConfig.getChainType().toString(), blockChainConfig.getBeginBlockNumber(), e);
         }
     }
 

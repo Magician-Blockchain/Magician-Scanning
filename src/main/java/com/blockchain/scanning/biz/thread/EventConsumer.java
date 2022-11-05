@@ -1,7 +1,10 @@
 package com.blockchain.scanning.biz.thread;
 
+import com.blockchain.scanning.biz.thread.model.EventModel;
 import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.model.TransactionModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -10,7 +13,16 @@ import java.util.List;
  */
 public class EventConsumer implements Runnable {
 
+    private Logger logger = LoggerFactory.getLogger(EventConsumer.class);
+
+    /**
+     * The main class used for scanning, there are currently 3 implementation classes, which can be extended in the future
+     */
     private ChainScanner chainScanner;
+
+    /**
+     * Queue, every time a block is scanned, a task will be placed in it, the scanned data will be processed asynchronously, and MonitorEvent will be called as needed
+     */
     private EventQueue eventQueue;
 
     public EventConsumer(ChainScanner chainScanner, EventQueue eventQueue){
@@ -21,14 +33,24 @@ public class EventConsumer implements Runnable {
     @Override
     public void run() {
         while (true) {
+            EventModel eventModel = null;
+
             try {
-                List<TransactionModel> transactionResultList = eventQueue.getLinkedBlockingQueue().take();
+                eventModel = eventQueue.getLinkedBlockingQueue().take();
+
+                logger.info("Transaction records with block height [{}] are being processed", eventModel.getCurrentBlockHeight());
+
+                List<TransactionModel> transactionResultList = eventModel.getTransactionModels();
 
                 for (TransactionModel transactionModel : transactionResultList) {
                     chainScanner.call(transactionModel);
                 }
             } catch (Exception e){
-
+                if(eventModel == null){
+                    logger.error("Exception in processing transaction record", e);
+                } else {
+                    logger.error("Exception in processing transaction record, block height: [{}]", eventModel.getCurrentBlockHeight(), e);
+                }
             }
         }
     }

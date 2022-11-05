@@ -71,6 +71,18 @@ public class EthContract {
      * write data to the contract
      * @param fromAddress
      * @param toAddress
+     * @param inputData
+     * @return
+     * @throws Exception
+     */
+    public SendResultModel sendRawTransaction(String fromAddress, String toAddress, String inputData) throws Exception {
+        return sendRawTransaction(fromAddress, toAddress, null, null, inputData);
+    }
+
+    /**
+     * write data to the contract
+     * @param fromAddress
+     * @param toAddress
      * @param gasPrice
      * @param gasLimit
      * @param inputData
@@ -81,6 +93,13 @@ public class EthContract {
         EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(fromAddress, DefaultBlockParameterName.LATEST).send();
 
         BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+
+        if(gasPrice == null){
+            gasPrice = web3j.ethGasPrice().send().getGasPrice();
+        }
+        if(gasLimit == null){
+            gasLimit = new BigInteger("8000000");
+        }
 
         RawTransaction rawTransaction = RawTransaction.createTransaction(nonce, gasPrice, gasLimit, toAddress, inputData);
 

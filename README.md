@@ -16,7 +16,7 @@ JDK8+
 
 ## Documentation
 
-[https://magician-io.com](https://magician-io.com)
+[https://magician-io.com/chain](https://magician-io.com/chain)
 
 ## Example
 

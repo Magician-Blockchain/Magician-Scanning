@@ -6,10 +6,9 @@
     <img src="https://img.shields.io/badge/release-master-brightgreen.svg"/>
 </h1>
 
-Magician-web3 is a blockchain development kit. 
-It consists of two functions. It scans the blockchain to monitor transactions based on the needs of developers. 
-It does some secondary encapsulation of web3j, which can reduce the workload of developers in some common scenarios. 
-Plans to support ETH (BSC, XSC, POLYGAN, etc.), SOL, TRON three chains
+Magician-web3 is a blockchain development toolkit. 
+It consists of two functions. One is to scan the blockchain and monitor the transactions according to the developer's needs. 
+The other is some secondary packaging of web3j, which can reduce the workload of developers in some common scenarios. It is planned to support three chains, ETH (BSC, POLYGAN, etc.), SOL and TRON
 
 ## Running environment
 

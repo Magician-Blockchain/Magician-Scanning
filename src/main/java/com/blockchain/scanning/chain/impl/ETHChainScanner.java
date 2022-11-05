@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Scan Ethereum, all chains that support the Ethereum standard (BSC, POLYGAN, XSC, etc.)
+ * Scan Ethereum, all chains that support the Ethereum standard (BSC, POLYGAN, etc.)
  */
 public class ETHChainScanner extends ChainScanner {
 

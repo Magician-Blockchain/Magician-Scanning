@@ -80,15 +80,17 @@ public class EthMonitorFilter {
         return minValue;
     }
 
-    public void setMinValue(BigInteger minValue) {
+    public EthMonitorFilter setMinValue(BigInteger minValue) {
         this.minValue = minValue;
+        return this;
     }
 
     public BigInteger getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(BigInteger maxValue) {
+    public EthMonitorFilter setMaxValue(BigInteger maxValue) {
         this.maxValue = maxValue;
+        return this;
     }
 }

@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.yuyenews</groupId>
-    <artifactId>Magician-web3</artifactId>
-    <version>1.0.0</version>
+    <artifactId>Magician-Web3</artifactId>
+    <version>1.0.1</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>

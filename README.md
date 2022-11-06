@@ -22,7 +22,7 @@ If there is a third case, then write another half line, one line at most.
 
 Note: The half and one lines I mentioned above refer to the code that needs to be written by hand, not the total code, but the total code is not much, and each scenario corresponds to an implementation class that implements only two methods.
 
-As a developer, you just need to pay attention to what kind of events to listen to, and nothing else needs to consume energy. For the transactions that call the contract, the developer may need to do secondary filtering, such as checking the logs to determine if the transaction is valid, parsing inputData to get more detailed information, and making judgments.
+As a developer, you just need to pay attention to what kind of events to listen to, and nothing else needs to consume energy. For the transactions that call the contract, the developer may need to do secondary filtering, such as checking the logs to determine if the transaction is valid, parsing inputData to get more detailed information and making judgments etc.
 
 ## Running environment
 

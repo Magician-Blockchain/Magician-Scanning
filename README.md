@@ -1,12 +1,12 @@
 <h1> 
-    <a href="https://magician-io.com">Magician-web3</a> ·
+    <a href="https://magician-io.com">Magician-Web3</a> ·
     <img src="https://img.shields.io/badge/licenes-MIT-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/jdk-8+-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/maven-3.5.4+-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/release-master-brightgreen.svg"/>
 </h1>
 
-Magician-web3 is a blockchain development toolkit. 
+Magician-Web3 is a blockchain development toolkit. 
 It consists of two functions. One is to scan the blockchain and monitor the transactions according to the developer's needs. 
 The other is some secondary packaging of web3j, which can reduce the workload of developers in some common scenarios. It is planned to support three chains, ETH (BSC, POLYGAN, etc.), SOL and TRON
 

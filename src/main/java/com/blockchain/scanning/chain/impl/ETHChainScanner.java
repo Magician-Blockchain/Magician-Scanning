@@ -63,6 +63,7 @@ public class ETHChainScanner extends ChainScanner {
 
             if(beginBlockNumber.compareTo(Web3jConstant.LAST_BLOCK_NUMBER) == 0){
                 beginBlockNumber = blockNumber;
+                endBlockNumber = beginBlockNumber.add(BigInteger.valueOf(blockChainConfig.getScanSize()));
             }
 
             if (beginBlockNumber.compareTo(blockNumber) > 0) {

@@ -3,6 +3,7 @@ package com.blockchain.scanning.chain;
 import com.blockchain.scanning.biz.scan.ScanService;
 import com.blockchain.scanning.biz.thread.EventQueue;
 import com.blockchain.scanning.chain.model.TransactionModel;
+import com.blockchain.scanning.commons.constant.Web3jConstant;
 import com.blockchain.scanning.config.BlockChainConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,14 +31,16 @@ public abstract class ChainScanner {
      * start scanning
      */
     public void scanStart() {
-        logger.info("start scanning, chainType: {}, beginBlockNumber: {}", blockChainConfig.getChainType().toString(), blockChainConfig.getBeginBlockNumber());
+        String logBeginBlockNumber = blockChainConfig.getBeginBlockNumber().compareTo(Web3jConstant.LAST_BLOCK_NUMBER) == 0 ? "LAST" : blockChainConfig.getBeginBlockNumber().toString();
+
+        logger.info("start scanning, chainType: {}, beginBlockNumber: {}", blockChainConfig.getChainType().toString(), logBeginBlockNumber);
 
         try {
             BigInteger endBlockNumber = blockChainConfig.getBeginBlockNumber().add(BigInteger.valueOf(blockChainConfig.getScanSize()));
 
             scan(blockChainConfig.getBeginBlockNumber(), endBlockNumber);
         } catch (Exception e){
-            logger.error("An exception occurred while scanning, chainType: {}, beginBlockNumber: {}", blockChainConfig.getChainType().toString(), blockChainConfig.getBeginBlockNumber(), e);
+            logger.error("An exception occurred while scanning, chainType: {}, beginBlockNumber: {}", blockChainConfig.getChainType().toString(), logBeginBlockNumber, e);
         }
     }
 

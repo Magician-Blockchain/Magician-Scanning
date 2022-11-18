@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.EthBlock;
-import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -47,7 +46,7 @@ public class ETHChainScanner extends ChainScanner {
     public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue) {
         super.init(blockChainConfig, eventQueue);
 
-        web3j = Web3j.build(new HttpService(blockChainConfig.getRpcUrl()));
+        web3j = Web3j.build(blockChainConfig.getHttpService());
     }
 
     /**

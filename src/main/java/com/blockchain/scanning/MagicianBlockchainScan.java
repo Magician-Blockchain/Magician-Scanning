@@ -5,8 +5,13 @@ import com.blockchain.scanning.commons.enums.ChainType;
 import com.blockchain.scanning.config.BlockChainConfig;
 import com.blockchain.scanning.config.EventConfig;
 import com.blockchain.scanning.monitor.EthMonitorEvent;
+import okhttp3.*;
+import org.web3j.protocol.http.HttpService;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 
 /**
  * Main class, used to create a block sweep task
@@ -32,8 +37,57 @@ public class MagicianBlockchainScan {
      * @param rpcUrl
      * @return
      */
-    public MagicianBlockchainScan setRpcUrl(String rpcUrl) {
-        blockChainConfig.setRpcUrl(rpcUrl);
+    public MagicianBlockchainScan setRpcUrl(String rpcUrl) throws Exception {
+        if(blockChainConfig.getHttpService() != null){
+            throw new Exception("You have set the rpcUrl");
+        }
+
+        blockChainConfig.setHttpService(new HttpService(rpcUrl));
+        return this;
+    }
+
+    /**
+     * set node url
+     * @param rpcUrl
+     * @return
+     */
+    public MagicianBlockchainScan setRpcUrl(String rpcUrl, Proxy proxy, Authenticator authenticator) throws Exception {
+        if(blockChainConfig.getHttpService() != null){
+            throw new Exception("You have set the rpcUrl");
+        }
+
+        OkHttpClient okHttpClient = HttpService.getOkHttpClientBuilder()
+                .proxy(proxy)
+                .proxyAuthenticator(authenticator)
+                .build();
+        blockChainConfig.setHttpService(new HttpService(rpcUrl, okHttpClient));
+        return this;
+    }
+
+    /**
+     * set node url
+     * @param okHttpClient
+     * @return
+     */
+    public MagicianBlockchainScan setRpcUrl(OkHttpClient okHttpClient) throws Exception {
+        if(blockChainConfig.getHttpService() != null){
+            throw new Exception("You have set the rpcUrl");
+        }
+
+        blockChainConfig.setHttpService(new HttpService(okHttpClient));
+        return this;
+    }
+
+    /**
+     * set node url
+     * @param httpService
+     * @return
+     */
+    public MagicianBlockchainScan setRpcUrl(HttpService httpService) throws Exception {
+        if(blockChainConfig.getHttpService() != null){
+            throw new Exception("You have set the rpcUrl");
+        }
+        blockChainConfig.setHttpService(httpService);
         return this;
     }
 
@@ -92,7 +146,7 @@ public class MagicianBlockchainScan {
      * @throws Exception
      */
     public void start() throws Exception {
-        if(blockChainConfig.getRpcUrl() == null || blockChainConfig.getRpcUrl().equals("")){
+        if(blockChainConfig.getHttpService() == null){
             throw new Exception("rpcUrl cannot be empty");
         }
 

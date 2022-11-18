@@ -1,6 +1,7 @@
 package com.blockchain.scanning.config;
 
 import com.blockchain.scanning.commons.enums.ChainType;
+import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
 
@@ -12,7 +13,7 @@ public class BlockChainConfig {
     /**
      * Node url
      */
-    private String rpcUrl;
+    private HttpService httpService;
 
     /**
      * Blockchain type (ETH, SOL, TRON, etc.)
@@ -34,12 +35,12 @@ public class BlockChainConfig {
      */
     private int scanSize = 1000;
 
-    public String getRpcUrl() {
-        return rpcUrl;
+    public HttpService getHttpService() {
+        return httpService;
     }
 
-    public void setRpcUrl(String rpcUrl) {
-        this.rpcUrl = rpcUrl;
+    public void setHttpService(HttpService httpService) {
+        this.httpService = httpService;
     }
 
     public ChainType getChainType() {

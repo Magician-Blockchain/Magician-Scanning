@@ -49,19 +49,33 @@ public class MagicianBlockchainScan {
     /**
      * set node url
      * @param rpcUrl
+     * @param proxy
+     * @param authenticator
      * @return
      */
     public MagicianBlockchainScan setRpcUrl(String rpcUrl, Proxy proxy, Authenticator authenticator) throws Exception {
-        if(blockChainConfig.getHttpService() != null){
+        if (blockChainConfig.getHttpService() != null) {
             throw new Exception("You have set the rpcUrl");
         }
 
-        OkHttpClient okHttpClient = HttpService.getOkHttpClientBuilder()
-                .proxy(proxy)
-                .proxyAuthenticator(authenticator)
-                .build();
-        blockChainConfig.setHttpService(new HttpService(rpcUrl, okHttpClient));
+        OkHttpClient.Builder okHttpClientBuilder = HttpService.getOkHttpClientBuilder();
+        okHttpClientBuilder.proxy(proxy);
+        if (authenticator != null) {
+            okHttpClientBuilder.proxyAuthenticator(authenticator);
+        }
+
+        blockChainConfig.setHttpService(new HttpService(rpcUrl, okHttpClientBuilder.build()));
         return this;
+    }
+
+    /**
+     * set node url
+     * @param rpcUrl
+     * @param proxy
+     * @return
+     */
+    public MagicianBlockchainScan setRpcUrl(String rpcUrl, Proxy proxy) throws Exception {
+        return setRpcUrl(rpcUrl, proxy, null);
     }
 
     /**

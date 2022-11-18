@@ -76,6 +76,7 @@ public class ETHChainScanner extends ChainScanner {
                 if (block == null || block.getBlock() == null) {
                     // prevent the frequency from being too fast
                     Thread.sleep(500);
+                    logger.info("Block height [{}] does not exist", i);
                     continue;
                 }
 
@@ -83,6 +84,7 @@ public class ETHChainScanner extends ChainScanner {
                 if (transactionResultList == null || transactionResultList.size() < 1) {
                     // prevent the frequency from being too fast
                     Thread.sleep(500);
+                    logger.info("No transactions were scanned on block height [{}]", i);
                     continue;
                 }
 

@@ -10,16 +10,9 @@ Magician-Web3 is a blockchain development toolkit.
 It consists of two functions. One is to scan the blockchain and monitor the transactions according to the developer's needs. 
 The other is some secondary packaging of web3j, which can reduce the workload of developers in some common scenarios. It is planned to support three chains, ETH (BSC, POLYGAN, etc.), SOL and TRON
 
-## Source Code Description
-
-### Running environment
+## Running environment
 
 JDK8+
-
-### Version Management
-
-- The master branch is the latest source code in development
-- Tag contains the released source code
 
 ## Documentation
 

@@ -8,9 +8,7 @@ import com.blockchain.scanning.monitor.EthMonitorEvent;
 import okhttp3.*;
 import org.web3j.protocol.http.HttpService;
 
-import java.io.IOException;
 import java.math.BigInteger;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 
 /**

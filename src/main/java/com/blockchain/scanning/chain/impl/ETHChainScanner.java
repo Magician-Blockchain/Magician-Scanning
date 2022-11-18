@@ -4,6 +4,7 @@ import com.blockchain.scanning.biz.thread.EventQueue;
 import com.blockchain.scanning.biz.thread.model.EventModel;
 import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.model.TransactionModel;
+import com.blockchain.scanning.commons.constant.Web3jConstant;
 import com.blockchain.scanning.commons.util.StringUtil;
 import com.blockchain.scanning.config.BlockChainConfig;
 import com.blockchain.scanning.config.EventConfig;
@@ -60,7 +61,7 @@ public class ETHChainScanner extends ChainScanner {
         try {
             BigInteger blockNumber = web3j.ethBlockNumber().send().getBlockNumber();
 
-            if(beginBlockNumber.compareTo(new BigInteger("-1")) == 0){
+            if(beginBlockNumber.compareTo(Web3jConstant.LAST_BLOCK_NUMBER) == 0){
                 beginBlockNumber = blockNumber;
             }
 

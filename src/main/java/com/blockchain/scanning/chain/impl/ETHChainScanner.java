@@ -74,17 +74,19 @@ public class ETHChainScanner extends ChainScanner {
 
                 EthBlock block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(i), true).send();
                 if (block == null || block.getBlock() == null) {
+                    logger.info("Block height [{}] does not exist", i);
+
                     // prevent the frequency from being too fast
                     Thread.sleep(500);
-                    logger.info("Block height [{}] does not exist", i);
                     continue;
                 }
 
                 List<EthBlock.TransactionResult> transactionResultList = block.getBlock().getTransactions();
                 if (transactionResultList == null || transactionResultList.size() < 1) {
+                    logger.info("No transactions were scanned on block height [{}]", i);
+
                     // prevent the frequency from being too fast
                     Thread.sleep(500);
-                    logger.info("No transactions were scanned on block height [{}]", i);
                     continue;
                 }
 

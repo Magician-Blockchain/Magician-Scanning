@@ -60,6 +60,10 @@ public class ETHChainScanner extends ChainScanner {
         try {
             BigInteger blockNumber = web3j.ethBlockNumber().send().getBlockNumber();
 
+            if(beginBlockNumber.compareTo(new BigInteger("-1")) == 0){
+                beginBlockNumber = blockNumber;
+            }
+
             if (beginBlockNumber.compareTo(blockNumber) > 0) {
                 logger.error("The starting block height has exceeded the current maximum block height, please reset");
                 return;

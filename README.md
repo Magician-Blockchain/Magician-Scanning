@@ -25,7 +25,7 @@ JDK8+
 <dependency>
     <groupId>com.github.yuyenews</groupId>
     <artifactId>Magician-Web3</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 
 <!-- This is the logging package, you must have it or the console will not see anything, any logging package that can bridge with slf4j is supported -->
@@ -57,9 +57,16 @@ public class EthMonitorEventImpl implements EthMonitorEvent {
     @Override
     public EthMonitorFilter ethMonitorFilter() {
         return EthMonitorFilter.builder()
-                .setMinValue(BigInteger.valueOf(100))
                 .setToAddress("0xasdasdasdasdasdasdasdasdas")
-                .setFunctionCode("0x1s8d5j6j");
+                .setInputDataFilter(
+                        InputDataFilter.create()
+                                .setFunctionCode(ERC20.TRANSFER.getFunctionCode())
+                                .setTypeReferences(
+                                        new TypeReference<Address>(){},
+                                        new TypeReference<Uint256>(){}
+                                )
+                                .setValue("0x552115849813d334C58f2757037F68E2963C4c5e", null)
+                );
     }
 
     /**

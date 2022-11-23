@@ -39,9 +39,7 @@ public abstract class ChainScanner {
         logger.info("start scanning, chainType: {}, beginBlockNumber: {}", blockChainConfig.getChainType().toString(), logBeginBlockNumber);
 
         try {
-            BigInteger endBlockNumber = blockChainConfig.getBeginBlockNumber().add(BigInteger.valueOf(blockChainConfig.getScanSize()));
-
-            scan(blockChainConfig.getBeginBlockNumber(), endBlockNumber);
+            scan(blockChainConfig.getBeginBlockNumber());
         } catch (Exception e){
             logger.error("An exception occurred while scanning, chainType: {}, beginBlockNumber: {}", blockChainConfig.getChainType().toString(), logBeginBlockNumber, e);
         }
@@ -65,9 +63,8 @@ public abstract class ChainScanner {
     /**
      * scan block
      * @param beginBlockNumber
-     * @param endBlockNumber
      */
-    public abstract void scan(BigInteger beginBlockNumber, BigInteger endBlockNumber);
+    public abstract void scan(BigInteger beginBlockNumber);
 
     /**
      * Process the scanned transaction data and perform monitoring events on demand

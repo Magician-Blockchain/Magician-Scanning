@@ -31,22 +31,16 @@ public class EthContract {
     private Web3j web3j;
 
     /**
-     * The private key used to call the contract
-     */
-    private String privateKey;
-
-    /**
      * ABI codec
      */
     private EthAbiCodec ethAbiCodec = new EthAbiCodec();
 
-    private EthContract(Web3j web3j, String privateKey){
+    private EthContract(Web3j web3j){
         this.web3j = web3j;
-        this.privateKey = privateKey;
     }
 
-    public static EthContract builder(Web3j web3j, String privateKey){
-        return new EthContract(web3j, privateKey);
+    public static EthContract builder(Web3j web3j){
+        return new EthContract(web3j);
     }
 
     /**
@@ -75,21 +69,22 @@ public class EthContract {
      * @return
      * @throws Exception
      */
-    public SendResultModel sendRawTransaction(String fromAddress, String toAddress, String inputData) throws Exception {
-        return sendRawTransaction(fromAddress, toAddress, null, null, inputData);
+    public SendResultModel sendRawTransaction(String fromAddress, String toAddress, String privateKey, String inputData) throws Exception {
+        return sendRawTransaction(fromAddress, toAddress, privateKey, null, null, inputData);
     }
 
     /**
      * write data to the contract
      * @param fromAddress
      * @param toAddress
+     * @param privateKey
      * @param gasPrice
      * @param gasLimit
      * @param inputData
      * @return
      * @throws Exception
      */
-    public SendResultModel sendRawTransaction(String fromAddress, String toAddress, BigInteger gasPrice, BigInteger gasLimit, String inputData) throws Exception {
+    public SendResultModel sendRawTransaction(String fromAddress, String toAddress, String privateKey, BigInteger gasPrice, BigInteger gasLimit, String inputData) throws Exception {
         EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(fromAddress, DefaultBlockParameterName.LATEST).send();
 
         BigInteger nonce = ethGetTransactionCount.getTransactionCount();

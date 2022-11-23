@@ -30,11 +30,6 @@ public class BlockChainConfig {
      */
     private BigInteger beginBlockNumber = BigInteger.ONE;
 
-    /**
-     * Scan size (a few blocks per scan)
-     */
-    private int scanSize = 1000;
-
     public HttpService getHttpService() {
         return httpService;
     }
@@ -65,13 +60,5 @@ public class BlockChainConfig {
 
     public void setBeginBlockNumber(BigInteger beginBlockNumber) {
         this.beginBlockNumber = beginBlockNumber;
-    }
-
-    public int getScanSize() {
-        return scanSize;
-    }
-
-    public void setScanSize(int scanSize) {
-        this.scanSize = scanSize;
     }
 }

@@ -13,7 +13,7 @@ import java.math.BigInteger;
 public class TronChainScanner extends ChainScanner {
 
     @Override
-    public void scan(BigInteger beginBlockNumber, BigInteger endBlockNumber) {
+    public void scan(BigInteger beginBlockNumber) {
 
     }
 

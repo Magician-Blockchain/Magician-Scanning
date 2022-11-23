@@ -22,29 +22,24 @@ public class EthHelper {
      */
     private Web3j web3j;
 
-    /**
-     * The private key to initiate the transaction
-     */
-    private String privateKey;
-
-    private EthHelper(Web3j web3j, String privateKey){
+    private EthHelper(Web3j web3j){
         this.web3j = web3j;
-        this.privateKey = privateKey;
     }
 
-    public static EthHelper builder(Web3j web3j, String privateKey){
-        return new EthHelper(web3j, privateKey);
+    public static EthHelper builder(Web3j web3j){
+        return new EthHelper(web3j);
     }
 
     /**
      * Transfer ETH coins to the specified address
      * @param toAddress
+     * @param privateKey
      * @param value
      * @param unit
      * @return
      * @throws Exception
      */
-    public TransactionReceipt transfer(String toAddress, BigDecimal value, Convert.Unit unit) throws Exception {
+    public TransactionReceipt transfer(String toAddress, String privateKey, BigDecimal value, Convert.Unit unit) throws Exception {
         return Transfer.sendFunds(
                 web3j,
                 Credentials.create(privateKey),
@@ -64,5 +59,4 @@ public class EthHelper {
         EthGetBalance ethGetBalance =  web3j.ethGetBalance(fromAddress, DefaultBlockParameterName.LATEST).send();
         return ethGetBalance.getBalance();
     }
-
 }

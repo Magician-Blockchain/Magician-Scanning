@@ -32,16 +32,16 @@ public class EthBuilder {
         return ethAbiCodec;
     }
 
-    public EthContract getEthContract(Web3j web3j, String privateKey){
+    public EthContract getEthContract(Web3j web3j){
         if(ethContract == null){
-            ethContract = EthContract.builder(web3j, privateKey);
+            ethContract = EthContract.builder(web3j);
         }
         return ethContract;
     }
 
-    public EthHelper getEth(Web3j web3j, String privateKey){
+    public EthHelper getEth(Web3j web3j){
         if(ethHelper == null){
-            ethHelper = EthHelper.builder(web3j, privateKey);
+            ethHelper = EthHelper.builder(web3j);
         }
         return ethHelper;
     }

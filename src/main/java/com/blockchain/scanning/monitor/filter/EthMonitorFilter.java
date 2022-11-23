@@ -8,11 +8,6 @@ import java.math.BigInteger;
 public class EthMonitorFilter {
 
     /**
-     * abi signature of the function to filter (top ten of inputData)
-     */
-    private String functionCode;
-
-    /**
      * The from address in the transaction
      */
     private String fromAddress;
@@ -36,20 +31,13 @@ public class EthMonitorFilter {
      */
     private BigInteger maxValue;
 
+    /**
+     * Set the criteria for filtering by inputData
+     */
+    private InputDataFilter inputDataFilter;
+
     public static EthMonitorFilter builder(){
         return new EthMonitorFilter();
-    }
-
-    public String getFunctionCode() {
-        if(functionCode != null){
-            return functionCode.toLowerCase();
-        }
-        return null;
-    }
-
-    public EthMonitorFilter setFunctionCode(String functionCode) {
-        this.functionCode = functionCode;
-        return this;
     }
 
     public String getFromAddress() {
@@ -91,6 +79,15 @@ public class EthMonitorFilter {
 
     public EthMonitorFilter setMaxValue(BigInteger maxValue) {
         this.maxValue = maxValue;
+        return this;
+    }
+
+    public InputDataFilter getInputDataFilter() {
+        return inputDataFilter;
+    }
+
+    public EthMonitorFilter setInputDataFilter(InputDataFilter inputDataFilter) {
+        this.inputDataFilter = inputDataFilter;
         return this;
     }
 }

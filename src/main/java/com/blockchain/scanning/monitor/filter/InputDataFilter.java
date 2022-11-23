@@ -9,8 +9,14 @@ public class InputDataFilter {
      */
     private String functionCode;
 
+    /**
+     * List of parameters for the function (type only)
+     */
     private TypeReference[] typeReferences;
 
+    /**
+     * Filter conditions
+     */
     private String[] value;
 
     public static InputDataFilter create(){

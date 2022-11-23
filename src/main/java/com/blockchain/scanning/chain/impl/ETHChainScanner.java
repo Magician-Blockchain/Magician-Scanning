@@ -166,6 +166,12 @@ public class ETHChainScanner extends ChainScanner {
         }
     }
 
+    /**
+     * Filter by inputDataFilter
+     * @param transactionObject
+     * @param ethMonitorFilter
+     * @return
+     */
     private boolean inputDataFilter(EthBlock.TransactionObject transactionObject, EthMonitorFilter ethMonitorFilter) {
         if (ethMonitorFilter.getInputDataFilter() == null) {
             return true;

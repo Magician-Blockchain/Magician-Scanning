@@ -2,6 +2,11 @@ package com.blockchain.scanning.monitor.filter;
 
 import org.web3j.abi.TypeReference;
 
+/**
+ * InputData Filter
+ *
+ * Set the conditions for filtering by inputData
+ */
 public class InputDataFilter {
 
     /**

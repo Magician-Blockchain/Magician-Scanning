@@ -128,17 +128,18 @@ List<Type> result = ethAbiCodec.decoderInputData("0xasdasdas00000000adasd",
 Web3j web3j = Web3j.build(new HttpService(""));
 String privateKey = "";
 
-EthHelper ethHelper = MagicianWeb3.getEthBuilder().getEth(web3j, privateKey);
+EthHelper ethHelper = MagicianWeb3.getEthBuilder().getEth(web3j);
 
 BigInteger amount = ethHelper.balanceOf(fromAddress);
 
 ethHelper.transfer(
         toAddress,
+        privateKey,
         BigDecimal.valueOf(1),
         Convert.Unit.ETHER
 );
 
-EthContract ethContract = MagicianWeb3.getEthBuilder().getEthContract(web3j, privateKey);
+EthContract ethContract = MagicianWeb3.getEthBuilder().getEthContract(web3j);
 
 List<Type> result =  ethContract.select(
         contractAddress,
@@ -153,6 +154,7 @@ System.out.println(result.get(0).getValue());
 ethContract.sendRawTransaction(
         fromAddress,
         contractAddress,
+        privateKey,
         ethAbiCodec.getInputData(
             "transfer",
             new Address(toAddress),

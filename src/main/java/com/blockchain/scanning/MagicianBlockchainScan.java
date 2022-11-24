@@ -156,8 +156,8 @@ public class MagicianBlockchainScan {
             throw new Exception("ChainType cannot be empty");
         }
 
-        if(blockChainConfig.getScanPeriod() < 3000){
-            throw new Exception("scanPeriod must be greater than 3000");
+        if(blockChainConfig.getScanPeriod() < 1000){
+            throw new Exception("scanPeriod must be greater than 1000");
         }
 
         if(blockChainConfig.getChainType().equals(ChainType.ETH) && (EventConfig.getEthMonitorEvent() == null || EventConfig.getEthMonitorEvent().size() < 1)){

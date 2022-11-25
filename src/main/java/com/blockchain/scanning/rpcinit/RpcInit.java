@@ -8,7 +8,7 @@ import com.blockchain.scanning.config.BlockChainConfig;
 public class RpcInit {
 
     /**
-     * Configure the parameters required for this block scanning task
+     * Configuration object that is used to pass the configuration of the RPC URL to the main configuration object
      */
     protected BlockChainConfig blockChainConfig = new BlockChainConfig();
 

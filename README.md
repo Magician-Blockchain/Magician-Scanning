@@ -25,7 +25,7 @@ JDK8+
 <dependency>
     <groupId>com.github.yuyenews</groupId>
     <artifactId>Magician-Web3</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.5</version>
 </dependency>
 
 <!-- This is the logging package, you must have it or the console will not see anything, any logging package that can bridge with slf4j is supported -->
@@ -59,7 +59,7 @@ public class EthMonitorEventImpl implements EthMonitorEvent {
         return EthMonitorFilter.builder()
                 .setToAddress("0xasdasdasdasdasdasdasdasdas")
                 .setInputDataFilter(
-                        InputDataFilter.create()
+                        InputDataFilter.builder()
                                 .setFunctionCode(ERC20.TRANSFER.getFunctionCode())
                                 .setTypeReferences(
                                         new TypeReference<Address>(){},
@@ -89,8 +89,12 @@ EventThreadPool.init(1);
 // Open a scan task, if you want to scan multiple chains, you can open multiple tasks, 
 // by copying the following code and modifying the corresponding configuration you can open a new task
 MagicianBlockchainScan.create()
-        .setRpcUrl("https://data-seed-prebsc-1-s1.binance.org:8545/")
-        .setChainType(ChainType.ETH)
+        .setRpcUrl(
+                EthRpcInit.create()// Set multiple addresses, polling policy will be used automatically to do load balancing
+                    .addRpcUrl("https://data-seed-prebsc-1-s1.binance.org:8545")
+                    .addRpcUrl("https://data-seed-prebsc-2-s1.binance.org:8545")
+                    .addRpcUrl("https://data-seed-prebsc-1-s2.binance.org:8545")
+        )
         .setScanPeriod(5000)
         .setBeginBlockNumber(BigInteger.valueOf(24318610))
         .addEthMonitorEvent(new EventOne())

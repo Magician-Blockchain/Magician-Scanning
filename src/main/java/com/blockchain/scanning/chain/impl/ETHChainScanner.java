@@ -1,6 +1,7 @@
 package com.blockchain.scanning.chain.impl;
 
 import com.blockchain.scanning.biz.thread.EventQueue;
+import com.blockchain.scanning.biz.thread.RetryStrategyQueue;
 import com.blockchain.scanning.biz.thread.model.EventModel;
 import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.model.TransactionModel;
@@ -18,10 +19,12 @@ import org.web3j.abi.datatypes.Type;
 import org.web3j.protocol.Web3j;
 import org.web3j.protocol.core.DefaultBlockParameter;
 import org.web3j.protocol.core.methods.response.EthBlock;
+import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Scan Ethereum, all chains that support the Ethereum standard (BSC, POLYGAN, etc.)
@@ -31,9 +34,14 @@ public class ETHChainScanner extends ChainScanner {
     private Logger logger = LoggerFactory.getLogger(ETHChainScanner.class);
 
     /**
+     * Used to implement polling load balancing
+     */
+    private AtomicInteger atomicInteger;
+
+    /**
      * web3j
      */
-    private Web3j web3j;
+    private List<Web3j> web3jList;
 
     /**
      * Get a list of Ethereum listening events
@@ -47,10 +55,15 @@ public class ETHChainScanner extends ChainScanner {
      * @param eventQueue
      */
     @Override
-    public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue) {
-        super.init(blockChainConfig, eventQueue);
+    public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue, RetryStrategyQueue retryStrategyQueue) {
+        super.init(blockChainConfig, eventQueue, retryStrategyQueue);
 
-        web3j = Web3j.build(blockChainConfig.getHttpService());
+        this.atomicInteger = new AtomicInteger(0);
+
+        this.web3jList = new ArrayList<>();
+        for(HttpService httpService : blockChainConfig.getHttpService()){
+            this.web3jList.add(Web3j.build(httpService));
+        }
     }
 
     /**
@@ -61,6 +74,8 @@ public class ETHChainScanner extends ChainScanner {
     @Override
     public void scan(BigInteger beginBlockNumber) {
         try {
+            Web3j web3j = getWeb3j();
+
             BigInteger lastBlockNumber = web3j.ethBlockNumber().send().getBlockNumber();
 
             if (beginBlockNumber.compareTo(BlockEnums.LAST_BLOCK_NUMBER.getValue()) == 0) {
@@ -75,8 +90,11 @@ public class ETHChainScanner extends ChainScanner {
             EthBlock block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(beginBlockNumber), true).send();
             if (block == null || block.getBlock() == null) {
                 logger.info("Block height [{}] does not exist", beginBlockNumber);
-                if(web3j.ethBlockNumber().send().getBlockNumber().compareTo(beginBlockNumber) > 0){
+                if(lastBlockNumber.compareTo(beginBlockNumber) > 0){
                     blockChainConfig.setBeginBlockNumber(beginBlockNumber.add(BigInteger.ONE));
+
+                    //If the block is skipped, the retry strategy needs to be notified
+                    addRetry(beginBlockNumber);
                 }
                 return;
             }
@@ -84,8 +102,11 @@ public class ETHChainScanner extends ChainScanner {
             List<EthBlock.TransactionResult> transactionResultList = block.getBlock().getTransactions();
             if (transactionResultList == null || transactionResultList.size() < 1) {
                 logger.info("No transactions were scanned on block height [{}]", beginBlockNumber);
-                if(web3j.ethBlockNumber().send().getBlockNumber().compareTo(beginBlockNumber) > 0){
+                if(lastBlockNumber.compareTo(beginBlockNumber) > 0){
                     blockChainConfig.setBeginBlockNumber(beginBlockNumber.add(BigInteger.ONE));
+
+                    //If the block is skipped, the retry strategy needs to be notified
+                    addRetry(beginBlockNumber);
                 }
                 return;
             }
@@ -230,5 +251,31 @@ public class ETHChainScanner extends ChainScanner {
         }
 
         return true;
+    }
+
+    /**
+     * Get the web3j object by polling
+     * @return
+     */
+    private Web3j getWeb3j(){
+        int index = atomicInteger.get();
+
+        if(index < (web3jList.size() - 1)){
+            atomicInteger.incrementAndGet();
+        } else {
+            atomicInteger.set(0);
+        }
+
+        return web3jList.get(index);
+    }
+
+    /**
+     * Add a block height that needs to be retried
+     * @param blockNumber
+     */
+    private void addRetry(BigInteger blockNumber){
+        if(this.retryStrategyQueue != null){
+            this.retryStrategyQueue.add(blockNumber);
+        }
     }
 }

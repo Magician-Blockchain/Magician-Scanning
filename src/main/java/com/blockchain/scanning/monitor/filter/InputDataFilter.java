@@ -24,7 +24,7 @@ public class InputDataFilter {
      */
     private String[] value;
 
-    public static InputDataFilter create(){
+    public static InputDataFilter builder(){
         return new InputDataFilter();
     }
 

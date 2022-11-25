@@ -1,9 +1,12 @@
 package com.blockchain.scanning.config;
 
+import com.blockchain.scanning.chain.RetryStrategy;
 import com.blockchain.scanning.commons.enums.ChainType;
 import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Configure the parameters required for this block scanning task
@@ -11,9 +14,9 @@ import java.math.BigInteger;
 public class BlockChainConfig {
 
     /**
-     * Node url
+     * ETH Node url
      */
-    private HttpService httpService;
+    private List<HttpService> httpService;
 
     /**
      * Blockchain type (ETH, SOL, TRON, etc.)
@@ -30,11 +33,24 @@ public class BlockChainConfig {
      */
     private BigInteger beginBlockNumber = BigInteger.ONE;
 
-    public HttpService getHttpService() {
+    /**
+     * Retry strategy
+     */
+    private RetryStrategy retryStrategy;
+
+    public BlockChainConfig(){
+        this.httpService = new ArrayList<>();
+    }
+
+    public List<HttpService> getHttpService() {
         return httpService;
     }
 
-    public void setHttpService(HttpService httpService) {
+    public void addHttpService(HttpService httpService) {
+        this.httpService.add(httpService);
+    }
+
+    public void setHttpService(List<HttpService> httpService) {
         this.httpService = httpService;
     }
 
@@ -60,5 +76,13 @@ public class BlockChainConfig {
 
     public void setBeginBlockNumber(BigInteger beginBlockNumber) {
         this.beginBlockNumber = beginBlockNumber;
+    }
+
+    public RetryStrategy getRetryStrategy() {
+        return retryStrategy;
+    }
+
+    public void setRetryStrategy(RetryStrategy retryStrategy) {
+        this.retryStrategy = retryStrategy;
     }
 }

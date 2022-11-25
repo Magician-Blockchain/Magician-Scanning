@@ -1,15 +1,17 @@
 package com.blockchain.scanning;
 
+import com.blockchain.scanning.chain.RetryStrategy;
 import com.blockchain.scanning.biz.scan.ScanService;
 import com.blockchain.scanning.commons.enums.ChainType;
 import com.blockchain.scanning.config.BlockChainConfig;
 import com.blockchain.scanning.config.EventConfig;
+import com.blockchain.scanning.rpcinit.RpcInit;
+import com.blockchain.scanning.rpcinit.impl.EthRpcInit;
+import com.blockchain.scanning.rpcinit.impl.SolRpcInit;
+import com.blockchain.scanning.rpcinit.impl.TronRpcInit;
 import com.blockchain.scanning.monitor.EthMonitorEvent;
-import okhttp3.*;
-import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
-import java.net.Proxy;
 
 /**
  * Main class, used to create a block sweep task
@@ -26,90 +28,42 @@ public class MagicianBlockchainScan {
      */
     private BlockChainConfig blockChainConfig = new BlockChainConfig();
 
+    /**
+     * Does the rpc address exist
+     */
+    private boolean rpcUrlExist = false;
+
     public static MagicianBlockchainScan create(){
         return new MagicianBlockchainScan();
     }
 
     /**
-     * set node url
-     * @param rpcUrl
+     * Set the RPC URL for the blockchain
+     * @param rpcInit
      * @return
      */
-    public MagicianBlockchainScan setRpcUrl(String rpcUrl) throws Exception {
-        if(blockChainConfig.getHttpService() != null){
-            throw new Exception("You have set the rpcUrl");
+    public MagicianBlockchainScan setRpcUrl(RpcInit rpcInit){
+        if(rpcInit instanceof EthRpcInit){
+            blockChainConfig.setChainType(ChainType.ETH);
+            blockChainConfig.setHttpService(rpcInit.getBlockChainConfig().getHttpService());
+        } else if(rpcInit instanceof SolRpcInit){
+            blockChainConfig.setChainType(ChainType.SOL);
+            // TODO In development.......
+        } else if(rpcInit instanceof TronRpcInit){
+            blockChainConfig.setChainType(ChainType.TRON);
+            // TODO In development.......
         }
-
-        blockChainConfig.setHttpService(new HttpService(rpcUrl));
+        rpcUrlExist = true;
         return this;
     }
 
     /**
-     * set node url
-     * @param rpcUrl
-     * @param proxy
-     * @param authenticator
+     * Setting the retry strategy
+     * @param retryStrategy
      * @return
      */
-    public MagicianBlockchainScan setRpcUrl(String rpcUrl, Proxy proxy, Authenticator authenticator) throws Exception {
-        if (blockChainConfig.getHttpService() != null) {
-            throw new Exception("You have set the rpcUrl");
-        }
-
-        OkHttpClient.Builder okHttpClientBuilder = HttpService.getOkHttpClientBuilder();
-        okHttpClientBuilder.proxy(proxy);
-        if (authenticator != null) {
-            okHttpClientBuilder.proxyAuthenticator(authenticator);
-        }
-
-        blockChainConfig.setHttpService(new HttpService(rpcUrl, okHttpClientBuilder.build()));
-        return this;
-    }
-
-    /**
-     * set node url
-     * @param rpcUrl
-     * @param proxy
-     * @return
-     */
-    public MagicianBlockchainScan setRpcUrl(String rpcUrl, Proxy proxy) throws Exception {
-        return setRpcUrl(rpcUrl, proxy, null);
-    }
-
-    /**
-     * set node url
-     * @param okHttpClient
-     * @return
-     */
-    public MagicianBlockchainScan setRpcUrl(OkHttpClient okHttpClient) throws Exception {
-        if(blockChainConfig.getHttpService() != null){
-            throw new Exception("You have set the rpcUrl");
-        }
-
-        blockChainConfig.setHttpService(new HttpService(okHttpClient));
-        return this;
-    }
-
-    /**
-     * set node url
-     * @param httpService
-     * @return
-     */
-    public MagicianBlockchainScan setRpcUrl(HttpService httpService) throws Exception {
-        if(blockChainConfig.getHttpService() != null){
-            throw new Exception("You have set the rpcUrl");
-        }
-        blockChainConfig.setHttpService(httpService);
-        return this;
-    }
-
-    /**
-     * Set the blockchain type (ETH, SOL, TRON, etc.)
-     * @param chainType
-     * @return
-     */
-    public MagicianBlockchainScan setChainType(ChainType chainType) {
-        blockChainConfig.setChainType(chainType);
+    public MagicianBlockchainScan setRetryStrategy(RetryStrategy retryStrategy){
+        blockChainConfig.setRetryStrategy(retryStrategy);
         return this;
     }
 
@@ -148,7 +102,7 @@ public class MagicianBlockchainScan {
      * @throws Exception
      */
     public void start() throws Exception {
-        if(blockChainConfig.getHttpService() == null){
+        if(rpcUrlExist == false){
             throw new Exception("rpcUrl cannot be empty");
         }
 
@@ -156,8 +110,8 @@ public class MagicianBlockchainScan {
             throw new Exception("ChainType cannot be empty");
         }
 
-        if(blockChainConfig.getScanPeriod() < 1000){
-            throw new Exception("scanPeriod must be greater than 1000");
+        if(blockChainConfig.getScanPeriod() < 500){
+            throw new Exception("scanPeriod must be greater than 500");
         }
 
         if(blockChainConfig.getChainType().equals(ChainType.ETH) && (EventConfig.getEthMonitorEvent() == null || EventConfig.getEthMonitorEvent().size() < 1)){

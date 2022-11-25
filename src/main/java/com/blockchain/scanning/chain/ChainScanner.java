@@ -2,6 +2,7 @@ package com.blockchain.scanning.chain;
 
 import com.blockchain.scanning.biz.scan.ScanService;
 import com.blockchain.scanning.biz.thread.EventQueue;
+import com.blockchain.scanning.biz.thread.RetryStrategyQueue;
 import com.blockchain.scanning.chain.model.TransactionModel;
 import com.blockchain.scanning.commons.enums.BlockEnums;
 import com.blockchain.scanning.config.BlockChainConfig;
@@ -28,6 +29,11 @@ public abstract class ChainScanner {
     protected EventQueue eventQueue;
 
     /**
+     * Queue, When a block height is skipped for some reason and the user has set a retry policy, the skipped block height will be placed in this queue and wait for a retry.
+     */
+    protected RetryStrategyQueue retryStrategyQueue;
+
+    /**
      * start scanning
      */
     public void scanStart() {
@@ -50,13 +56,17 @@ public abstract class ChainScanner {
      * @param blockChainConfig
      * @param eventQueue
      */
-    public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue) {
+    public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue, RetryStrategyQueue retryStrategyQueue) {
         if(this.blockChainConfig == null){
             this.blockChainConfig = blockChainConfig;
         }
 
         if(this.eventQueue == null){
             this.eventQueue = eventQueue;
+        }
+
+        if(this.retryStrategyQueue == null){
+            this.retryStrategyQueue = retryStrategyQueue;
         }
     }
 

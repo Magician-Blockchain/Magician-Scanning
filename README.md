@@ -16,7 +16,7 @@ Magician-Web3 is a toolkit for scanning blockchains developed in Java, which can
 
 It is planned to support three chains, ETH (BSC, POLYGON, etc.), SOL and TRON
 
-In addition, some secondary packaging has been done for web3j to reduce the workload of developers in certain scenarios
+In addition, some secondary packaging has been done for Web3j to reduce the workload of developers in certain scenarios
 
 ## Running environment
 

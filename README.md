@@ -6,9 +6,17 @@
     <img src="https://img.shields.io/badge/release-master-brightgreen.svg"/>
 </h1>
 
-Magician-Web3 is a blockchain development toolkit. 
-It consists of two functions. One is to scan the blockchain and monitor the transactions according to the developer's needs. 
-The other is some secondary packaging of web3j, which can reduce the workload of developers in some common scenarios. It is planned to support three chains, ETH (BSC, POLYGON, etc.), SOL and TRON
+Magician-Web3 is a toolkit for scanning blockchains developed in Java, which can come in handy when we need some functionality in our programs, for example.
+
+- When an address receives ETH, a method in the program is automatically triggered and this transaction is passed into the method.
+
+- When a function of a contract is called (like ERC20 transfer), it automatically triggers a method in the program and passes this transaction to this method. It can even be triggered only when tokens are transferred to a specified address.
+
+- This toolkit can also be used when a program needs to keep a record of all transactions since the beginning of a block height.
+
+It is planned to support three chains, ETH (BSC, POLYGON, etc.), SOL and TRON
+
+In addition, some secondary packaging has been done for web3j to reduce the workload of developers in certain scenarios
 
 ## Running environment
 

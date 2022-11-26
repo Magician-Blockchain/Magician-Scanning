@@ -174,17 +174,3 @@ ethContract.sendRawTransaction(
         )
 );
 ```
-
-## To explain this toolkit more intuitively, let me give you an example, for example.
-
-I want the program to receive all the fields of a transaction message when a coin is received at a certain address. If I use this toolkit, I only need to write half a line of code by hand (not including the business operation after receiving the notification, because there is no escape from that, as with any tool).
-
-If you add a scenario above where the program receives the appropriate transaction information when the number of coins received or sent to an address is within a certain range, then you don't need to change anything, just write another half line of code, and that half line of code is isolated and completely decoupled from the other half.
-
-If you need to drop one of these two cases, just delete it or comment it out.
-
-If there is a third case, then write another half line, one line at most.
-
-Note: The half and one lines I mentioned above refer to the code that needs to be written by hand, not the total code, but the total code is not much, and each scenario corresponds to an implementation class that implements only two methods.
-
-As a developer, you just need to pay attention to what kind of events to listen to, and nothing else needs to consume energy. For the transactions that call the contract, the developer may need to do secondary filtering, such as checking the logs to determine if the transaction is valid, parsing inputData to get more detailed information and making judgments etc.

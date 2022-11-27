@@ -109,7 +109,7 @@ MagicianBlockchainScan.create()
         .start();
 ```
 
-### ETH ABI Codec
+### ETH InputData Codec
 
 ```java
 // Encode the function as inputData

@@ -112,23 +112,20 @@ MagicianBlockchainScan.create()
 ### ETH ABI Codec
 
 ```java
-// ABI codec
-EthAbiCodec ethAbiCodec = MagicianWeb3.getEthBuilder().getEthAbiCodec();
-
 // Encode the function as inputData
-String inputData = ethAbiCodec.getInputData("mint",
+String inputData = EthAbiCodec.getInputData("mint",
     new Address("0xqwasdasd"),
     new Utf8String("https://asdasdasdsadasd.json")
 );
 
 // Get the function's signature
-String funcCode = ethAbiCodec.getFunAbiCode("mint",
+String funcCode = EthAbiCodec.getFunAbiCode("mint",
     new Address("0xqwasdasd"),
     new Utf8String("https://asdasdasdsadasd.json")
 );
 
 // Decode inputData into raw data
-List<Type> result = ethAbiCodec.decoderInputData("0xasdasdas00000000adasd",
+List<Type> result = EthAbiCodec.decoderInputData("0xasdasdas00000000adasd",
     new TypeReference<Address>(){},
     new TypeReference<Utf8String>(){}
 );

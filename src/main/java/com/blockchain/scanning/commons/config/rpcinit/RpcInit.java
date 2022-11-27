@@ -1,6 +1,6 @@
-package com.blockchain.scanning.rpcinit;
+package com.blockchain.scanning.commons.config.rpcinit;
 
-import com.blockchain.scanning.config.BlockChainConfig;
+import com.blockchain.scanning.commons.config.BlockChainConfig;
 
 /**
  * Set rpc address

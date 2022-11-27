@@ -1,4 +1,4 @@
-package com.blockchain.scanning.config;
+package com.blockchain.scanning.commons.config;
 
 import com.blockchain.scanning.monitor.EthMonitorEvent;
 

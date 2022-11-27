@@ -1,4 +1,4 @@
-package com.blockchain.web3.eth.codec;
+package com.blockchain.scanning.commons.codec;
 
 import org.web3j.abi.FunctionEncoder;
 import org.web3j.abi.FunctionReturnDecoder;
@@ -20,7 +20,7 @@ public class EthAbiCodec {
      * @param inputTypes
      * @return
      */
-    public String getInputData(String functionName, Type... inputTypes){
+    public static String getInputData(String functionName, Type... inputTypes){
         List<Type> inputTypeList = new ArrayList<>();
         for(Type type : inputTypes){
             inputTypeList.add(type);
@@ -36,7 +36,7 @@ public class EthAbiCodec {
      * @param inputTypes
      * @return
      */
-    public String getFunAbiCode(String functionName, Type... inputTypes) {
+    public static String getFunAbiCode(String functionName, Type... inputTypes) {
         String inputData = getInputData(functionName, inputTypes);
         if(inputData == null || inputData.equals("")){
             return null;
@@ -50,7 +50,7 @@ public class EthAbiCodec {
      * @param inputTypes
      * @return
      */
-    public List<Type> decoderInputData(String inputData, TypeReference... inputTypes){
+    public static List<Type> decoderInputData(String inputData, TypeReference... inputTypes){
         List<TypeReference<?>> inputTypeList = new ArrayList<>();
         for(TypeReference typeReference : inputTypes){
             inputTypeList.add(typeReference);

@@ -5,7 +5,7 @@ import com.blockchain.scanning.biz.thread.EventQueue;
 import com.blockchain.scanning.biz.thread.RetryStrategyQueue;
 import com.blockchain.scanning.chain.model.TransactionModel;
 import com.blockchain.scanning.commons.enums.BlockEnums;
-import com.blockchain.scanning.config.BlockChainConfig;
+import com.blockchain.scanning.commons.config.BlockChainConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

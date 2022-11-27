@@ -4,7 +4,7 @@ import com.blockchain.scanning.biz.thread.*;
 import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.RetryStrategy;
 import com.blockchain.scanning.chain.factory.ChainScannerFactory;
-import com.blockchain.scanning.config.BlockChainConfig;
+import com.blockchain.scanning.commons.config.BlockChainConfig;
 
 import java.util.Date;
 import java.util.Timer;

@@ -1,12 +1,12 @@
 <h1> 
-    <a href="https://magician-io.com">Magician-Web3</a> ·
+    <a href="https://magician-io.com">Magician-Scanning</a> ·
     <img src="https://img.shields.io/badge/licenes-MIT-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/jdk-8+-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/maven-3.5.4+-brightgreen.svg"/>
     <img src="https://img.shields.io/badge/release-master-brightgreen.svg"/>
 </h1>
 
-Magician-Web3 is a toolkit for scanning blockchains developed in Java, which can come in handy when we need some functionality in our programs, for example.
+Magician-Scanning is a toolkit for scanning blockchains developed in Java, which can come in handy when we need some functionality in our programs, for example.
 
 - When an address receives ETH, a method in the program is automatically triggered and this transaction is passed into the method.
 
@@ -15,8 +15,6 @@ Magician-Web3 is a toolkit for scanning blockchains developed in Java, which can
 - This toolkit can also be used when a program needs to keep a record of all transactions since the beginning of a block height.
 
 It is planned to support three chains, ETH (BSC, POLYGON, etc.), SOL and TRON
-
-In addition, some secondary packaging has been done for Web3j to reduce the workload of developers in certain scenarios
 
 ## Running environment
 
@@ -32,8 +30,8 @@ JDK8+
 ```xml
 <dependency>
     <groupId>com.github.yuyenews</groupId>
-    <artifactId>Magician-Web3</artifactId>
-    <version>1.0.5</version>
+    <artifactId>Magician-Scanning</artifactId>
+    <version>1.0.6</version>
 </dependency>
 
 <!-- This is the logging package, you must have it or the console will not see anything, any logging package that can bridge with slf4j is supported -->
@@ -111,7 +109,7 @@ MagicianBlockchainScan.create()
         .start();
 ```
 
-### Other utils
+### ETH ABI Codec
 
 ```java
 // ABI codec
@@ -133,44 +131,5 @@ String funcCode = ethAbiCodec.getFunAbiCode("mint",
 List<Type> result = ethAbiCodec.decoderInputData("0xasdasdas00000000adasd",
     new TypeReference<Address>(){},
     new TypeReference<Utf8String>(){}
-);
-
-// ------------------------ More, if you are interested, you can visit our official website for more information ----------------------
-
-Web3j web3j = Web3j.build(new HttpService(""));
-String privateKey = "";
-
-EthHelper ethHelper = MagicianWeb3.getEthBuilder().getEth(web3j);
-
-BigInteger amount = ethHelper.balanceOf(fromAddress);
-
-ethHelper.transfer(
-        toAddress,
-        privateKey,
-        BigDecimal.valueOf(1),
-        Convert.Unit.ETHER
-);
-
-EthContract ethContract = MagicianWeb3.getEthBuilder().getEthContract(web3j);
-
-List<Type> result =  ethContract.select(
-        contractAddress,
-        ethAbiCodec.getInputData(
-        "balanceOf",
-        new Address(toAddress)),
-        new TypeReference<Uint256>() {}
-);
-
-System.out.println(result.get(0).getValue());
-
-ethContract.sendRawTransaction(
-        fromAddress,
-        contractAddress,
-        privateKey,
-        ethAbiCodec.getInputData(
-            "transfer",
-            new Address(toAddress),
-            new Uint256(new BigInteger("1000000000000000000"))
-        )
 );
 ```

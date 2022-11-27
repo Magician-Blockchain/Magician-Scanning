@@ -1,6 +1,6 @@
-package com.blockchain.scanning.rpcinit.impl;
+package com.blockchain.scanning.commons.config.rpcinit.impl;
 
-import com.blockchain.scanning.rpcinit.RpcInit;
+import com.blockchain.scanning.commons.config.rpcinit.RpcInit;
 
 /**
  * TODO In development.......

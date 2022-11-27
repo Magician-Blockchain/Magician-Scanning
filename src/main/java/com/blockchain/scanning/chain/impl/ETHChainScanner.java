@@ -5,14 +5,14 @@ import com.blockchain.scanning.biz.thread.RetryStrategyQueue;
 import com.blockchain.scanning.biz.thread.model.EventModel;
 import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.model.TransactionModel;
+import com.blockchain.scanning.commons.codec.EthAbiCodec;
 import com.blockchain.scanning.commons.enums.BlockEnums;
 import com.blockchain.scanning.commons.util.StringUtil;
-import com.blockchain.scanning.config.BlockChainConfig;
-import com.blockchain.scanning.config.EventConfig;
+import com.blockchain.scanning.commons.config.BlockChainConfig;
+import com.blockchain.scanning.commons.config.EventConfig;
 import com.blockchain.scanning.monitor.EthMonitorEvent;
 import com.blockchain.scanning.monitor.filter.EthMonitorFilter;
 import com.blockchain.scanning.monitor.filter.InputDataFilter;
-import com.blockchain.web3.MagicianWeb3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.abi.datatypes.Type;
@@ -61,7 +61,7 @@ public class ETHChainScanner extends ChainScanner {
         this.atomicInteger = new AtomicInteger(0);
 
         this.web3jList = new ArrayList<>();
-        for(HttpService httpService : blockChainConfig.getHttpService()){
+        for (HttpService httpService : blockChainConfig.getHttpService()) {
             this.web3jList.add(Web3j.build(httpService));
         }
     }
@@ -90,7 +90,7 @@ public class ETHChainScanner extends ChainScanner {
             EthBlock block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(beginBlockNumber), true).send();
             if (block == null || block.getBlock() == null) {
                 logger.info("Block height [{}] does not exist", beginBlockNumber);
-                if(lastBlockNumber.compareTo(beginBlockNumber) > 0){
+                if (lastBlockNumber.compareTo(beginBlockNumber) > 0) {
                     blockChainConfig.setBeginBlockNumber(beginBlockNumber.add(BigInteger.ONE));
 
                     //If the block is skipped, the retry strategy needs to be notified
@@ -102,7 +102,7 @@ public class ETHChainScanner extends ChainScanner {
             List<EthBlock.TransactionResult> transactionResultList = block.getBlock().getTransactions();
             if (transactionResultList == null || transactionResultList.size() < 1) {
                 logger.info("No transactions were scanned on block height [{}]", beginBlockNumber);
-                if(lastBlockNumber.compareTo(beginBlockNumber) > 0){
+                if (lastBlockNumber.compareTo(beginBlockNumber) > 0) {
                     blockChainConfig.setBeginBlockNumber(beginBlockNumber.add(BigInteger.ONE));
 
                     //If the block is skipped, the retry strategy needs to be notified
@@ -189,6 +189,7 @@ public class ETHChainScanner extends ChainScanner {
 
     /**
      * Filter by inputDataFilter
+     *
      * @param transactionObject
      * @param ethMonitorFilter
      * @return
@@ -220,13 +221,11 @@ public class ETHChainScanner extends ChainScanner {
                 && inputDataFilter.getValue() != null
                 && inputDataFilter.getValue().length > 0) {
 
-            if(inputDataFilter.getTypeReferences().length < inputDataFilter.getValue().length){
+            if (inputDataFilter.getTypeReferences().length < inputDataFilter.getValue().length) {
                 return false;
             }
 
-            List<Type> result = MagicianWeb3.getEthBuilder()
-                    .getEthAbiCodec()
-                    .decoderInputData(inputData, inputDataFilter.getTypeReferences());
+            List<Type> result = EthAbiCodec.decoderInputData(inputData, inputDataFilter.getTypeReferences());
 
             if (result == null || result.size() < inputDataFilter.getValue().length) {
                 return false;
@@ -240,7 +239,7 @@ public class ETHChainScanner extends ChainScanner {
                     return false;
                 }
 
-                if(value == null){
+                if (value == null) {
                     continue;
                 }
 
@@ -255,12 +254,13 @@ public class ETHChainScanner extends ChainScanner {
 
     /**
      * Get the web3j object by polling
+     *
      * @return
      */
-    private Web3j getWeb3j(){
+    private Web3j getWeb3j() {
         int index = atomicInteger.get();
 
-        if(index < (web3jList.size() - 1)){
+        if (index < (web3jList.size() - 1)) {
             atomicInteger.incrementAndGet();
         } else {
             atomicInteger.set(0);
@@ -271,10 +271,11 @@ public class ETHChainScanner extends ChainScanner {
 
     /**
      * Add a block height that needs to be retried
+     *
      * @param blockNumber
      */
-    private void addRetry(BigInteger blockNumber){
-        if(this.retryStrategyQueue != null){
+    private void addRetry(BigInteger blockNumber) {
+        if (this.retryStrategyQueue != null) {
             this.retryStrategyQueue.add(blockNumber);
         }
     }

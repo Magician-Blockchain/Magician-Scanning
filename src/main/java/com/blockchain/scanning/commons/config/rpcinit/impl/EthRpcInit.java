@@ -1,6 +1,6 @@
-package com.blockchain.scanning.rpcinit.impl;
+package com.blockchain.scanning.commons.config.rpcinit.impl;
 
-import com.blockchain.scanning.rpcinit.RpcInit;
+import com.blockchain.scanning.commons.config.rpcinit.RpcInit;
 import okhttp3.Authenticator;
 import okhttp3.OkHttpClient;
 import org.web3j.protocol.http.HttpService;

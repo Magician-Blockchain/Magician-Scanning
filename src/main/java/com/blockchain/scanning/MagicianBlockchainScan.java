@@ -131,6 +131,9 @@ public class MagicianBlockchainScan {
      */
     public void shutdown(){
         scanService.getTimer().cancel();
+        scanService.getEventConsumer().setShutdown(true);
+        scanService.getRetryStrategyConsumer().setShutdown(true);
+
         EventThreadPool.shutdown();
     }
 }

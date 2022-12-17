@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Retry strategy consumer
@@ -23,16 +24,32 @@ public class RetryStrategyConsumer implements Runnable {
      */
     private RetryStrategy retryStrategy;
 
+    /**
+     * Whether to stop
+     */
+    private boolean shutdown;
+
     public RetryStrategyConsumer(RetryStrategyQueue retryStrategyQueue, RetryStrategy retryStrategy){
         this.retryStrategyQueue = retryStrategyQueue;
         this.retryStrategy = retryStrategy;
+        this.shutdown = false;
+    }
+
+    public void setShutdown(boolean shutdown) {
+        this.shutdown = shutdown;
     }
 
     public void run() {
         while(true) {
             BigInteger blockNumber = null;
             try {
-                blockNumber = this.retryStrategyQueue.getLinkedBlockingQueue().take();
+                blockNumber = this.retryStrategyQueue.getLinkedBlockingQueue().poll(2000, TimeUnit.MILLISECONDS);
+                if(blockNumber == null){
+                    if(shutdown){
+                        return;
+                    }
+                    continue;
+                }
 
                 logger.info("Start rescanning block height:[{}]", blockNumber);
 

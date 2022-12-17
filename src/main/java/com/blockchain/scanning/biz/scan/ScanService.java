@@ -40,12 +40,30 @@ public class ScanService {
     private Timer timer;
 
     /**
+     * Monitor events consumer
+     */
+    private EventConsumer eventConsumer;
+
+    /**
+     * Retry strategy consumer
+     */
+    private RetryStrategyConsumer retryStrategyConsumer;
+
+    /**
      * Queue, When a block height is skipped for some reason and the user has set a retry policy, the skipped block height will be placed in this queue and wait for a retry.
      */
     protected RetryStrategyQueue retryStrategyQueue;
 
     public Timer getTimer() {
         return timer;
+    }
+
+    public EventConsumer getEventConsumer() {
+        return eventConsumer;
+    }
+
+    public RetryStrategyConsumer getRetryStrategyConsumer() {
+        return retryStrategyConsumer;
     }
 
     /**
@@ -64,9 +82,12 @@ public class ScanService {
 
         chainScanner.init(blockChainConfig, eventQueue, retryStrategyQueue);
 
-        EventThreadPool.submit(new EventConsumer(chainScanner, eventQueue));
+        eventConsumer = new EventConsumer(chainScanner, eventQueue);
+        EventThreadPool.submit(eventConsumer);
+
         if(this.retryStrategy != null){
-            EventThreadPool.submit(new RetryStrategyConsumer(retryStrategyQueue, retryStrategy));
+            retryStrategyConsumer = new RetryStrategyConsumer(retryStrategyQueue, retryStrategy);
+            EventThreadPool.submit(retryStrategyConsumer);
         }
     }
 

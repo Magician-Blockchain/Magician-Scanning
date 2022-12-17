@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * event consumer
@@ -25,9 +26,19 @@ public class EventConsumer implements Runnable {
      */
     private EventQueue eventQueue;
 
+    /**
+     * Whether to stop
+     */
+    private boolean shutdown;
+
     public EventConsumer(ChainScanner chainScanner, EventQueue eventQueue){
         this.chainScanner = chainScanner;
         this.eventQueue = eventQueue;
+        this.shutdown = false;
+    }
+
+    public void setShutdown(boolean shutdown) {
+        this.shutdown = shutdown;
     }
 
     @Override
@@ -36,7 +47,14 @@ public class EventConsumer implements Runnable {
             EventModel eventModel = null;
 
             try {
-                eventModel = eventQueue.getLinkedBlockingQueue().take();
+                eventModel = eventQueue.getLinkedBlockingQueue().poll(2000, TimeUnit.MILLISECONDS);
+
+                if(eventModel == null){
+                    if(shutdown){
+                        return;
+                    }
+                    continue;
+                }
 
                 logger.info("Transaction records with block height [{}] are being processed", eventModel.getCurrentBlockHeight());
 

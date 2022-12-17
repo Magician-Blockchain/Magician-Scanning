@@ -36,6 +36,9 @@ public class MagicianBlockchainScan {
      */
     private boolean rpcUrlExist = false;
 
+    /**
+     * all scan job
+     */
     private static List<MagicianBlockchainScan> magicianBlockchainScans = new ArrayList<>();
 
     public static MagicianBlockchainScan create(){

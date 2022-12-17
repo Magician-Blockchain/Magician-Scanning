@@ -13,6 +13,8 @@ import com.blockchain.scanning.commons.config.rpcinit.impl.TronRpcInit;
 import com.blockchain.scanning.monitor.EthMonitorEvent;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Main class, used to create a block sweep task
@@ -33,6 +35,8 @@ public class MagicianBlockchainScan {
      * Does the rpc address exist
      */
     private boolean rpcUrlExist = false;
+
+    private static List<MagicianBlockchainScan> magicianBlockchainScans = new ArrayList<>();
 
     public static MagicianBlockchainScan create(){
         return new MagicianBlockchainScan();
@@ -124,6 +128,8 @@ public class MagicianBlockchainScan {
 
         // execute the scan
         scanService.start();
+
+        magicianBlockchainScans.add(this);
     }
 
     /**
@@ -133,7 +139,15 @@ public class MagicianBlockchainScan {
         scanService.getTimer().cancel();
         scanService.getEventConsumer().setShutdown(true);
         scanService.getRetryStrategyConsumer().setShutdown(true);
+    }
 
+    /**
+     * Stop all scan job
+     */
+    public static void shutdownAll(){
+        for(MagicianBlockchainScan magicianBlockchainScan : magicianBlockchainScans){
+            magicianBlockchainScan.shutdown();
+        }
         EventThreadPool.shutdown();
     }
 }

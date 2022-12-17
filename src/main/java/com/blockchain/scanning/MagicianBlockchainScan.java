@@ -1,5 +1,6 @@
 package com.blockchain.scanning;
 
+import com.blockchain.scanning.biz.thread.EventThreadPool;
 import com.blockchain.scanning.chain.RetryStrategy;
 import com.blockchain.scanning.biz.scan.ScanService;
 import com.blockchain.scanning.commons.enums.ChainType;
@@ -123,5 +124,13 @@ public class MagicianBlockchainScan {
 
         // execute the scan
         scanService.start();
+    }
+
+    /**
+     * Stop the current scan job
+     */
+    public void shutdown(){
+        scanService.getTimer().cancel();
+        EventThreadPool.shutdown();
     }
 }

@@ -35,9 +35,18 @@ public class ScanService {
     private EventQueue eventQueue;
 
     /**
+     * Timed tasks to perform scanning tasks
+     */
+    private Timer timer;
+
+    /**
      * Queue, When a block height is skipped for some reason and the user has set a retry policy, the skipped block height will be placed in this queue and wait for a retry.
      */
     protected RetryStrategyQueue retryStrategyQueue;
+
+    public Timer getTimer() {
+        return timer;
+    }
 
     /**
      * Initialize all member variables
@@ -66,7 +75,8 @@ public class ScanService {
      * @throws Exception
      */
     public void start() {
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 chainScanner.scanStart();

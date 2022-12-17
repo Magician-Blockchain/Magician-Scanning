@@ -35,4 +35,13 @@ public class EventThreadPool {
         }
         threadPoolExecutor.submit(runnable);
     }
+
+    /**
+     * Stopping the thread pool
+     */
+    public static void shutdown(){
+        if (threadPoolExecutor != null) {
+            threadPoolExecutor.shutdown();
+        }
+    }
 }

@@ -6,7 +6,7 @@
 
     <groupId>com.github.yuyenews</groupId>
     <artifactId>Magician-Scanning</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.web3j</groupId>
             <artifactId>core</artifactId>
-            <version>4.9.4</version>
+            <version>4.9.5</version>
         </dependency>
     </dependencies>
 

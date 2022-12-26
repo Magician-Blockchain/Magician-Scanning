@@ -27,12 +27,12 @@ public class MagicianBlockchainScan {
     /**
      * Business class, Used to perform scan block logic
      */
-    private ScanService scanService = new ScanService();
+    private ScanService scanService;
 
     /**
      * Configure the parameters required for this block scanning task
      */
-    private BlockChainConfig blockChainConfig = new BlockChainConfig();
+    private BlockChainConfig blockChainConfig;
 
     /**
      * Does the rpc address exist
@@ -42,7 +42,13 @@ public class MagicianBlockchainScan {
     /**
      * all scan job
      */
-    private static List<MagicianBlockchainScan> magicianBlockchainScans = new ArrayList<>();
+    private static List<MagicianBlockchainScan> magicianBlockchainScans;
+
+    private MagicianBlockchainScan(){
+        scanService = new ScanService();
+        blockChainConfig = new BlockChainConfig();
+        magicianBlockchainScans = new ArrayList<>();
+    }
 
     public static MagicianBlockchainScan create(){
         return new MagicianBlockchainScan();
@@ -104,7 +110,7 @@ public class MagicianBlockchainScan {
      * @return
      */
     public MagicianBlockchainScan addEthMonitorEvent(EthMonitorEvent ethMonitorEvent) {
-        EventConfig.addEthMonitorEvent(ethMonitorEvent);
+        blockChainConfig.getEventConfig().addEthMonitorEvent(ethMonitorEvent);
         return this;
     }
 
@@ -113,19 +119,23 @@ public class MagicianBlockchainScan {
      * @throws Exception
      */
     public void start() throws Exception {
-        if(rpcUrlExist == false){
+        if (rpcUrlExist == false) {
             throw new Exception("rpcUrl cannot be empty");
         }
 
-        if(blockChainConfig.getChainType() == null){
+        if (blockChainConfig.getChainType() == null) {
             throw new Exception("ChainType cannot be empty");
         }
 
-        if(blockChainConfig.getScanPeriod() < 500){
+        if (blockChainConfig.getScanPeriod() < 500) {
             throw new Exception("scanPeriod must be greater than 500");
         }
 
-        if(blockChainConfig.getChainType().equals(ChainType.ETH) && (EventConfig.getEthMonitorEvent() == null || EventConfig.getEthMonitorEvent().size() < 1)){
+        if (blockChainConfig.getChainType().equals(ChainType.ETH)
+                && (blockChainConfig.getEventConfig() == null
+                || blockChainConfig.getEventConfig().getEthMonitorEvent() == null
+                || blockChainConfig.getEventConfig().getEthMonitorEvent().size() < 1)
+        ) {
             throw new Exception("You need to set up at least one monitor event");
         }
 

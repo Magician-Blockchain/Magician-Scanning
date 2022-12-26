@@ -46,7 +46,7 @@ public class ETHChainScanner extends ChainScanner {
     /**
      * Get a list of Ethereum listening events
      */
-    private List<EthMonitorEvent> ethMonitorEventList = EventConfig.getEthMonitorEvent();
+    private List<EthMonitorEvent> ethMonitorEventList;
 
     /**
      * Initialize all member variables
@@ -58,6 +58,7 @@ public class ETHChainScanner extends ChainScanner {
     public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue, RetryStrategyQueue retryStrategyQueue) {
         super.init(blockChainConfig, eventQueue, retryStrategyQueue);
 
+        this.ethMonitorEventList = blockChainConfig.getEventConfig().getEthMonitorEvent();
         this.atomicInteger = new AtomicInteger(0);
 
         this.web3jList = new ArrayList<>();

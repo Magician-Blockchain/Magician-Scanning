@@ -13,14 +13,14 @@ public class EventConfig {
     /**
      * ETH monitoring event
      */
-    private static List<EthMonitorEvent> ethMonitorEvent = new ArrayList<>();
+    private List<EthMonitorEvent> ethMonitorEventList = new ArrayList<>();
 
-    public static List<EthMonitorEvent> getEthMonitorEvent() {
-        return ethMonitorEvent;
+    public List<EthMonitorEvent> getEthMonitorEvent() {
+        return ethMonitorEventList;
     }
 
-    public static void addEthMonitorEvent(EthMonitorEvent ethMonitorEvent) {
-        EventConfig.ethMonitorEvent.add(ethMonitorEvent);
+    public void addEthMonitorEvent(EthMonitorEvent ethMonitorEvent) {
+        ethMonitorEventList.add(ethMonitorEvent);
     }
 
 }

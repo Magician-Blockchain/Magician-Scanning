@@ -38,7 +38,13 @@ public class BlockChainConfig {
      */
     private RetryStrategy retryStrategy;
 
+    /**
+     * Event monitor configuration
+     */
+    private EventConfig eventConfig;
+
     public BlockChainConfig(){
+        this.eventConfig = new EventConfig();
         this.httpService = new ArrayList<>();
     }
 
@@ -84,5 +90,13 @@ public class BlockChainConfig {
 
     public void setRetryStrategy(RetryStrategy retryStrategy) {
         this.retryStrategy = retryStrategy;
+    }
+
+    public EventConfig getEventConfig() {
+        return eventConfig;
+    }
+
+    public void setEventConfig(EventConfig eventConfig) {
+        this.eventConfig = eventConfig;
     }
 }

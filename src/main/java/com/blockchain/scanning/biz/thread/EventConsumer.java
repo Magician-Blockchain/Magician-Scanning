@@ -56,7 +56,7 @@ public class EventConsumer implements Runnable {
                     continue;
                 }
 
-                logger.info("Transaction records with block height [{}] are being processed", eventModel.getCurrentBlockHeight());
+                logger.info("[{}], Transaction records with block height [{}] are being processed", chainScanner.getChainType().toString(), eventModel.getCurrentBlockHeight());
 
                 List<TransactionModel> transactionResultList = eventModel.getTransactionModels();
 
@@ -65,9 +65,9 @@ public class EventConsumer implements Runnable {
                 }
             } catch (Exception e){
                 if(eventModel == null){
-                    logger.error("Exception in processing transaction record", e);
+                    logger.error("[{}], Exception in processing transaction record", chainScanner.getChainType().toString(), e);
                 } else {
-                    logger.error("Exception in processing transaction record, block height: [{}]", eventModel.getCurrentBlockHeight(), e);
+                    logger.error("[{}], Exception in processing transaction record, block height: [{}]", chainScanner.getChainType().toString(), eventModel.getCurrentBlockHeight(), e);
                 }
             }
         }

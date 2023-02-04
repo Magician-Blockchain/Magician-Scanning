@@ -1,6 +1,7 @@
 package com.blockchain.scanning.commons.config;
 
 import com.blockchain.scanning.monitor.EthMonitorEvent;
+import com.blockchain.scanning.monitor.TronMonitorEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,11 @@ public class EventConfig {
      */
     private List<EthMonitorEvent> ethMonitorEventList = new ArrayList<>();
 
+    /**
+     * Tron monitoring event
+     */
+    private List<TronMonitorEvent> tronMonitorEvents = new ArrayList<>();
+
     public List<EthMonitorEvent> getEthMonitorEvent() {
         return ethMonitorEventList;
     }
@@ -23,4 +29,11 @@ public class EventConfig {
         ethMonitorEventList.add(ethMonitorEvent);
     }
 
+    public List<TronMonitorEvent> getTronMonitorEvents() {
+        return tronMonitorEvents;
+    }
+
+    public void addTronMonitorEvents(TronMonitorEvent tronMonitorEvent) {
+        this.tronMonitorEvents.add(tronMonitorEvent);
+    }
 }

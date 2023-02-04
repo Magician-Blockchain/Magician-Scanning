@@ -13,6 +13,7 @@ import com.blockchain.scanning.commons.config.rpcinit.impl.EthRpcInit;
 import com.blockchain.scanning.commons.config.rpcinit.impl.SolRpcInit;
 import com.blockchain.scanning.commons.config.rpcinit.impl.TronRpcInit;
 import com.blockchain.scanning.monitor.EthMonitorEvent;
+import com.blockchain.scanning.monitor.TronMonitorEvent;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -68,7 +69,7 @@ public class MagicianBlockchainScan {
             // TODO In development.......
         } else if(rpcInit instanceof TronRpcInit){
             blockChainConfig.setChainType(ChainType.TRON);
-            // TODO In development.......
+            blockChainConfig.setApiWrappers(rpcInit.getBlockChainConfig().getApiWrappers());
         }
         rpcUrlExist = true;
         return this;
@@ -115,6 +116,16 @@ public class MagicianBlockchainScan {
     }
 
     /**
+     * Add TRON monitoring event
+     * @param tronMonitorEvent
+     * @return
+     */
+    public MagicianBlockchainScan addTronMonitorEvent(TronMonitorEvent tronMonitorEvent) {
+        blockChainConfig.getEventConfig().addTronMonitorEvents(tronMonitorEvent);
+        return this;
+    }
+
+    /**
      * start a task
      * @throws Exception
      */
@@ -135,6 +146,14 @@ public class MagicianBlockchainScan {
                 && (blockChainConfig.getEventConfig() == null
                 || blockChainConfig.getEventConfig().getEthMonitorEvent() == null
                 || blockChainConfig.getEventConfig().getEthMonitorEvent().size() < 1)
+        ) {
+            throw new Exception("You need to set up at least one monitor event");
+        }
+
+        if (blockChainConfig.getChainType().equals(ChainType.TRON)
+                && (blockChainConfig.getEventConfig() == null
+                || blockChainConfig.getEventConfig().getTronMonitorEvents() == null
+                || blockChainConfig.getEventConfig().getTronMonitorEvents().size() < 1)
         ) {
             throw new Exception("You need to set up at least one monitor event");
         }

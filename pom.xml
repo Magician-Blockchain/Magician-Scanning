@@ -6,7 +6,7 @@
 
     <groupId>com.github.yuyenews</groupId>
     <artifactId>Magician-Scanning</artifactId>
-    <version>1.0.9</version>
+    <version>1.0.10-beta</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -28,6 +28,27 @@
             <groupId>org.web3j</groupId>
             <artifactId>core</artifactId>
             <version>4.9.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.tron.trident</groupId>
+            <artifactId>abi</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tron.trident</groupId>
+            <artifactId>utils</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.tron.trident</groupId>
+            <artifactId>core</artifactId>
+            <version>0.3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.11.0</version>
         </dependency>
     </dependencies>
 

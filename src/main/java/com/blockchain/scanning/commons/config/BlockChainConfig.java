@@ -2,6 +2,7 @@ package com.blockchain.scanning.commons.config;
 
 import com.blockchain.scanning.chain.RetryStrategy;
 import com.blockchain.scanning.commons.enums.ChainType;
+import org.tron.trident.core.ApiWrapper;
 import org.web3j.protocol.http.HttpService;
 
 import java.math.BigInteger;
@@ -17,6 +18,11 @@ public class BlockChainConfig {
      * ETH Node url
      */
     private List<HttpService> httpService;
+
+    /**
+     * TRON Node url
+     */
+    private List<ApiWrapper> apiWrappers;
 
     /**
      * Blockchain type (ETH, SOL, TRON, etc.)
@@ -46,6 +52,7 @@ public class BlockChainConfig {
     public BlockChainConfig(){
         this.eventConfig = new EventConfig();
         this.httpService = new ArrayList<>();
+        this.apiWrappers = new ArrayList<>();
     }
 
     public List<HttpService> getHttpService() {
@@ -58,6 +65,18 @@ public class BlockChainConfig {
 
     public void setHttpService(List<HttpService> httpService) {
         this.httpService = httpService;
+    }
+
+    public List<ApiWrapper> getApiWrappers() {
+        return apiWrappers;
+    }
+
+    public void addApiWrappers(ApiWrapper apiWrapper) {
+        this.apiWrappers.add(apiWrapper);
+    }
+
+    public void setApiWrappers(List<ApiWrapper> apiWrappers) {
+        this.apiWrappers = apiWrappers;
     }
 
     public ChainType getChainType() {

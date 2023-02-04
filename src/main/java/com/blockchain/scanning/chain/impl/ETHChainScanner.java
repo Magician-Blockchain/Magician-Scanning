@@ -9,7 +9,6 @@ import com.blockchain.scanning.commons.codec.EthAbiCodec;
 import com.blockchain.scanning.commons.enums.BlockEnums;
 import com.blockchain.scanning.commons.util.StringUtil;
 import com.blockchain.scanning.commons.config.BlockChainConfig;
-import com.blockchain.scanning.commons.config.EventConfig;
 import com.blockchain.scanning.monitor.EthMonitorEvent;
 import com.blockchain.scanning.monitor.filter.EthMonitorFilter;
 import com.blockchain.scanning.monitor.filter.InputDataFilter;
@@ -24,7 +23,6 @@ import org.web3j.protocol.http.HttpService;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Scan Ethereum, all chains that support the Ethereum standard (BSC, POLYGAN, etc.)
@@ -33,10 +31,6 @@ public class ETHChainScanner extends ChainScanner {
 
     private Logger logger = LoggerFactory.getLogger(ETHChainScanner.class);
 
-    /**
-     * Used to implement polling load balancing
-     */
-    private AtomicInteger atomicInteger;
 
     /**
      * web3j
@@ -59,7 +53,6 @@ public class ETHChainScanner extends ChainScanner {
         super.init(blockChainConfig, eventQueue, retryStrategyQueue);
 
         this.ethMonitorEventList = blockChainConfig.getEventConfig().getEthMonitorEvent();
-        this.atomicInteger = new AtomicInteger(0);
 
         this.web3jList = new ArrayList<>();
         for (HttpService httpService : blockChainConfig.getHttpService()) {
@@ -75,7 +68,7 @@ public class ETHChainScanner extends ChainScanner {
     @Override
     public void scan(BigInteger beginBlockNumber) {
         try {
-            Web3j web3j = getWeb3j();
+            Web3j web3j = this.web3jList.get(getNextIndex(web3jList.size()));
 
             BigInteger lastBlockNumber = web3j.ethBlockNumber().send().getBlockNumber();
 
@@ -84,13 +77,13 @@ public class ETHChainScanner extends ChainScanner {
             }
 
             if (beginBlockNumber.compareTo(lastBlockNumber) > 0) {
-                logger.info("The block height on the chain has fallen behind the block scanning progress, pause scanning in progress ...... , scan progress [{}], latest block height on chain:[{}]", beginBlockNumber, lastBlockNumber);
+                logger.info("[ETH], The block height on the chain has fallen behind the block scanning progress, pause scanning in progress ...... , scan progress [{}], latest block height on chain:[{}]", beginBlockNumber, lastBlockNumber);
                 return;
             }
 
             EthBlock block = web3j.ethGetBlockByNumber(DefaultBlockParameter.valueOf(beginBlockNumber), true).send();
             if (block == null || block.getBlock() == null) {
-                logger.info("Block height [{}] does not exist", beginBlockNumber);
+                logger.info("[ETH], Block height [{}] does not exist", beginBlockNumber);
                 if (lastBlockNumber.compareTo(beginBlockNumber) > 0) {
                     blockChainConfig.setBeginBlockNumber(beginBlockNumber.add(BigInteger.ONE));
 
@@ -102,7 +95,7 @@ public class ETHChainScanner extends ChainScanner {
 
             List<EthBlock.TransactionResult> transactionResultList = block.getBlock().getTransactions();
             if (transactionResultList == null || transactionResultList.size() < 1) {
-                logger.info("No transactions were scanned on block height [{}]", beginBlockNumber);
+                logger.info("[ETH], No transactions were scanned on block height [{}]", beginBlockNumber);
                 if (lastBlockNumber.compareTo(beginBlockNumber) > 0) {
                     blockChainConfig.setBeginBlockNumber(beginBlockNumber.add(BigInteger.ONE));
 
@@ -130,7 +123,7 @@ public class ETHChainScanner extends ChainScanner {
 
             blockChainConfig.setBeginBlockNumber(beginBlockNumber.add(BigInteger.ONE));
         } catch (Exception e) {
-            logger.error("An exception occurred while scanning, block height:[{}]", beginBlockNumber, e);
+            logger.error("[ETH], An exception occurred while scanning, block height:[{}]", beginBlockNumber, e);
         }
     }
 
@@ -251,33 +244,5 @@ public class ETHChainScanner extends ChainScanner {
         }
 
         return true;
-    }
-
-    /**
-     * Get the web3j object by polling
-     *
-     * @return
-     */
-    private Web3j getWeb3j() {
-        int index = atomicInteger.get();
-
-        if (index < (web3jList.size() - 1)) {
-            atomicInteger.incrementAndGet();
-        } else {
-            atomicInteger.set(0);
-        }
-
-        return web3jList.get(index);
-    }
-
-    /**
-     * Add a block height that needs to be retried
-     *
-     * @param blockNumber
-     */
-    private void addRetry(BigInteger blockNumber) {
-        if (this.retryStrategyQueue != null) {
-            this.retryStrategyQueue.add(blockNumber);
-        }
     }
 }

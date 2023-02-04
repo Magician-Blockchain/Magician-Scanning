@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * The main class used for scanning, there are currently 3 implementation classes, which can be extended in the future
@@ -32,6 +33,11 @@ public abstract class ChainScanner {
      * Queue, When a block height is skipped for some reason and the user has set a retry policy, the skipped block height will be placed in this queue and wait for a retry.
      */
     protected RetryStrategyQueue retryStrategyQueue;
+
+    /**
+     * Used to implement polling load balancing
+     */
+    private AtomicInteger atomicInteger;
 
     /**
      * start scanning
@@ -68,6 +74,35 @@ public abstract class ChainScanner {
         if(this.retryStrategyQueue == null){
             this.retryStrategyQueue = retryStrategyQueue;
         }
+
+        this.atomicInteger = new AtomicInteger(0);
+    }
+
+    /**
+     * Add a block height that needs to be retried
+     *
+     * @param blockNumber
+     */
+    protected void addRetry(BigInteger blockNumber) {
+        if (this.retryStrategyQueue != null) {
+            this.retryStrategyQueue.add(blockNumber);
+        }
+    }
+
+    /**
+     * Get the node index by polling
+     *
+     * @return
+     */
+    protected int getNextIndex(int maxValue){
+        int index = atomicInteger.get();
+
+        if (index < (maxValue - 1)) {
+            atomicInteger.incrementAndGet();
+        } else {
+            atomicInteger.set(0);
+        }
+        return index;
     }
 
     /**

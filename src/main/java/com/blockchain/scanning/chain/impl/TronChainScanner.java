@@ -113,7 +113,6 @@ public class TronChainScanner extends ChainScanner {
 
     @Override
     public void call(TransactionModel transactionModel) {
-        // Chain.Transaction transaction = transactionModel.getTronTransactionModel();
         // TODO Filtered by condition, under development ......
 
         for(TronMonitorEvent tronMonitorEvent : this.tronMonitorEvents){

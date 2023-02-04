@@ -7,7 +7,6 @@ import com.blockchain.scanning.chain.RetryStrategy;
 import com.blockchain.scanning.biz.scan.ScanService;
 import com.blockchain.scanning.commons.enums.ChainType;
 import com.blockchain.scanning.commons.config.BlockChainConfig;
-import com.blockchain.scanning.commons.config.EventConfig;
 import com.blockchain.scanning.commons.config.rpcinit.RpcInit;
 import com.blockchain.scanning.commons.config.rpcinit.impl.EthRpcInit;
 import com.blockchain.scanning.commons.config.rpcinit.impl.SolRpcInit;

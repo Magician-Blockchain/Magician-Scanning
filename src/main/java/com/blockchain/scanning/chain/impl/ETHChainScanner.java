@@ -31,7 +31,6 @@ public class ETHChainScanner extends ChainScanner {
 
     private Logger logger = LoggerFactory.getLogger(ETHChainScanner.class);
 
-
     /**
      * web3j
      */

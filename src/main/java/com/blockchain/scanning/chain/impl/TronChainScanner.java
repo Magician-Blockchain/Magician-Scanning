@@ -5,6 +5,7 @@ import com.blockchain.scanning.biz.thread.RetryStrategyQueue;
 import com.blockchain.scanning.biz.thread.model.EventModel;
 import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.model.TransactionModel;
+import com.blockchain.scanning.chain.model.TronTransactionModel;
 import com.blockchain.scanning.commons.config.BlockChainConfig;
 import com.blockchain.scanning.commons.enums.BlockEnums;
 import com.blockchain.scanning.monitor.TronMonitorEvent;
@@ -89,8 +90,12 @@ public class TronChainScanner extends ChainScanner {
             List<TransactionModel> transactionList = new ArrayList<>();
 
             for(Chain.Transaction transaction : tronTransactionList){
-                transactionList.add(TransactionModel.builder()
-                        .setTronTransactionModel(transaction)
+                transactionList.add(
+                        TransactionModel.builder().setTronTransactionModel(
+                                TronTransactionModel.builder()
+                                    .setBlock(block)
+                                    .setTransaction(transaction)
+                        )
                 );
             }
 

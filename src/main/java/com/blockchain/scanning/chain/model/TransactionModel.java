@@ -1,6 +1,5 @@
 package com.blockchain.scanning.chain.model;
 
-import org.tron.trident.proto.Chain;
 import org.web3j.protocol.core.methods.response.EthBlock;
 
 /**
@@ -14,9 +13,9 @@ public class TransactionModel {
     private EthBlock.TransactionObject ethTransactionModel;
 
     /**
-     * Transaction objects on the Tron chain
+     * TransactionInfo on the Tron chain
      */
-    private Chain.Transaction tronTransactionModel;
+    private TronTransactionModel tronTransactionModel;
 
     // TODO SOL are under development, so there is no result set attribute for the time being
 
@@ -33,11 +32,11 @@ public class TransactionModel {
         return this;
     }
 
-    public Chain.Transaction getTronTransactionModel() {
+    public TronTransactionModel getTronTransactionModel() {
         return tronTransactionModel;
     }
 
-    public TransactionModel setTronTransactionModel(Chain.Transaction tronTransactionModel) {
+    public TransactionModel setTronTransactionModel(TronTransactionModel tronTransactionModel) {
         this.tronTransactionModel = tronTransactionModel;
         return this;
     }

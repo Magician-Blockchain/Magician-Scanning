@@ -55,7 +55,7 @@ public class SSLSocketClient {
             }
             trustManager = (X509TrustManager) trustManagers[0];
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
         return trustManager;

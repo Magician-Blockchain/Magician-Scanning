@@ -136,47 +136,51 @@ public class ETHChainScanner extends ChainScanner {
         EthBlock.TransactionObject transactionObject = transactionModel.getEthTransactionModel();
 
         for (EthMonitorEvent ethMonitorEvent : ethMonitorEventList) {
-            if (transactionModel.getEthTransactionModel().getValue() == null) {
-                transactionModel.getEthTransactionModel().setValue("0");
-            }
+            try {
+                if (transactionModel.getEthTransactionModel().getValue() == null) {
+                    transactionModel.getEthTransactionModel().setValue("0");
+                }
 
-            if (transactionObject.getInput() != null
-                    && transactionObject.getInput().toLowerCase().startsWith("0x") == false) {
-                transactionObject.setInput("0x" + transactionObject.getInput());
-            }
+                if (transactionObject.getInput() != null
+                        && transactionObject.getInput().toLowerCase().startsWith("0x") == false) {
+                    transactionObject.setInput("0x" + transactionObject.getInput());
+                }
 
-            EthMonitorFilter ethMonitorFilter = ethMonitorEvent.ethMonitorFilter();
+                EthMonitorFilter ethMonitorFilter = ethMonitorEvent.ethMonitorFilter();
 
-            if (ethMonitorFilter == null) {
+                if (ethMonitorFilter == null) {
+                    ethMonitorEvent.call(transactionModel);
+                    continue;
+                }
+
+                if (StringUtil.isNotEmpty(ethMonitorFilter.getFromAddress())
+                        && (StringUtil.isEmpty(transactionObject.getFrom()) || ethMonitorFilter.getFromAddress().equals(transactionObject.getFrom().toLowerCase()) == false)) {
+                    continue;
+                }
+
+                if (StringUtil.isNotEmpty(ethMonitorFilter.getToAddress())
+                        && (StringUtil.isEmpty(transactionObject.getTo()) || ethMonitorFilter.getToAddress().equals(transactionObject.getTo().toLowerCase()) == false)) {
+                    continue;
+                }
+
+                if (ethMonitorFilter.getMinValue() != null
+                        && ethMonitorFilter.getMinValue().compareTo(transactionModel.getEthTransactionModel().getValue()) > 0) {
+                    continue;
+                }
+
+                if (ethMonitorFilter.getMaxValue() != null
+                        && ethMonitorFilter.getMaxValue().compareTo(transactionModel.getEthTransactionModel().getValue()) < 0) {
+                    continue;
+                }
+
+                if (inputDataFilter(transactionObject, ethMonitorFilter) == false) {
+                    continue;
+                }
+
                 ethMonitorEvent.call(transactionModel);
-                continue;
+            } catch (Exception e) {
+                logger.error("[ETH], An exception occurred in the call method of the listener", e);
             }
-
-            if (StringUtil.isNotEmpty(ethMonitorFilter.getFromAddress())
-                    && (StringUtil.isEmpty(transactionObject.getFrom()) || ethMonitorFilter.getFromAddress().equals(transactionObject.getFrom().toLowerCase()) == false)) {
-                continue;
-            }
-
-            if (StringUtil.isNotEmpty(ethMonitorFilter.getToAddress())
-                    && (StringUtil.isEmpty(transactionObject.getTo()) || ethMonitorFilter.getToAddress().equals(transactionObject.getTo().toLowerCase()) == false)) {
-                continue;
-            }
-
-            if (ethMonitorFilter.getMinValue() != null
-                    && ethMonitorFilter.getMinValue().compareTo(transactionModel.getEthTransactionModel().getValue()) > 0) {
-                continue;
-            }
-
-            if (ethMonitorFilter.getMaxValue() != null
-                    && ethMonitorFilter.getMaxValue().compareTo(transactionModel.getEthTransactionModel().getValue()) < 0) {
-                continue;
-            }
-
-            if (inputDataFilter(transactionObject, ethMonitorFilter) == false) {
-                continue;
-            }
-
-            ethMonitorEvent.call(transactionModel);
         }
     }
 

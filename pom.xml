@@ -29,31 +29,6 @@
             <artifactId>core</artifactId>
             <version>4.9.5</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.tron.trident</groupId>
-            <artifactId>abi</artifactId>
-            <version>0.3.0</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.tron.trident</groupId>
-            <artifactId>utils</artifactId>
-            <version>0.3.0</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.tron.trident</groupId>
-            <artifactId>core</artifactId>
-            <version>0.3.0</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>com.google.protobuf</groupId>
-            <artifactId>protobuf-java</artifactId>
-            <version>3.11.0</version>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
 
     <parent>

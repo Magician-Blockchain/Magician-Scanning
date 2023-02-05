@@ -5,18 +5,22 @@ import com.blockchain.scanning.biz.thread.RetryStrategyQueue;
 import com.blockchain.scanning.biz.thread.model.EventModel;
 import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.model.TransactionModel;
-import com.blockchain.scanning.chain.model.TronTransactionModel;
+import com.blockchain.scanning.chain.model.tron.TronBlockModel;
+import com.blockchain.scanning.chain.model.tron.TronTransactionModel;
 import com.blockchain.scanning.commons.config.BlockChainConfig;
+import com.blockchain.scanning.commons.constant.TronConstants;
 import com.blockchain.scanning.commons.enums.BlockEnums;
+import com.blockchain.scanning.commons.util.JSONUtil;
+import com.blockchain.scanning.commons.util.okhttp.OkHttpUtil;
 import com.blockchain.scanning.monitor.TronMonitorEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tron.trident.core.ApiWrapper;
-import org.tron.trident.proto.Chain;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * scan the tron chain
@@ -30,7 +34,7 @@ public class TronChainScanner extends ChainScanner {
     /**
      * TRON Node url
      */
-    private List<ApiWrapper> apiWrappers;
+    private List<String> tronRpcUrls;
 
     /**
      * Get a list of Tron listening events
@@ -41,7 +45,7 @@ public class TronChainScanner extends ChainScanner {
     public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue, RetryStrategyQueue retryStrategyQueue) {
         super.init(blockChainConfig, eventQueue, retryStrategyQueue);
 
-        this.apiWrappers = blockChainConfig.getApiWrappers();
+        this.tronRpcUrls = blockChainConfig.getTronRpcUrls();
         this.tronMonitorEvents = blockChainConfig.getEventConfig().getTronMonitorEvents();
 
     }
@@ -49,9 +53,9 @@ public class TronChainScanner extends ChainScanner {
     @Override
     public void scan(BigInteger beginBlockNumber) {
         try {
-            ApiWrapper apiWrapper = this.apiWrappers.get(getNextIndex(apiWrappers.size()));
+            String url = this.tronRpcUrls.get(getNextIndex(tronRpcUrls.size()));
 
-            BigInteger lastBlockNumber = BigInteger.valueOf(apiWrapper.getNowBlock().getBlockHeader().getRawData().getNumber());
+            BigInteger lastBlockNumber = getBlock(url).getTronBlockHeaderModel().getTronRawDataModel().getNumber();
 
             if (beginBlockNumber.compareTo(BlockEnums.LAST_BLOCK_NUMBER.getValue()) == 0) {
                 beginBlockNumber = lastBlockNumber;
@@ -62,8 +66,8 @@ public class TronChainScanner extends ChainScanner {
                 return;
             }
 
-            Chain.Block block = apiWrapper.getBlockByNum(beginBlockNumber.longValue());
-            if (block == null) {
+            TronBlockModel tronBlockModel = getBlockByNum(url, beginBlockNumber);
+            if (tronBlockModel == null) {
                 logger.info("[TRON], Block height [{}] does not exist", beginBlockNumber);
                 if (lastBlockNumber.compareTo(beginBlockNumber) > 0) {
                     blockChainConfig.setBeginBlockNumber(beginBlockNumber.add(BigInteger.ONE));
@@ -74,7 +78,7 @@ public class TronChainScanner extends ChainScanner {
                 return;
             }
 
-            List<Chain.Transaction> tronTransactionList = block.getTransactionsList();
+            List<TronTransactionModel> tronTransactionList = tronBlockModel.getTransactions();
             if (tronTransactionList == null || tronTransactionList.size() < 1) {
                 logger.info("[TRON], No transactions were scanned on block height [{}]", beginBlockNumber);
                 if (lastBlockNumber.compareTo(beginBlockNumber) > 0) {
@@ -89,13 +93,15 @@ public class TronChainScanner extends ChainScanner {
 
             List<TransactionModel> transactionList = new ArrayList<>();
 
-            for(Chain.Transaction transaction : tronTransactionList){
+            for(TronTransactionModel transaction : tronTransactionList){
+                if(transaction == null){
+                    continue;
+                }
+                transaction.setBlockID(tronBlockModel.getBlockID());
+                transaction.setTronBlockHeaderModel(tronBlockModel.getTronBlockHeaderModel());
                 transactionList.add(
-                        TransactionModel.builder().setTronTransactionModel(
-                                TronTransactionModel.builder()
-                                    .setBlock(block)
-                                    .setTransaction(transaction)
-                        )
+                        TransactionModel.builder()
+                                .setTronTransactionModel(transaction)
                 );
             }
 
@@ -116,7 +122,35 @@ public class TronChainScanner extends ChainScanner {
         // TODO Filtered by condition, under development ......
 
         for(TronMonitorEvent tronMonitorEvent : this.tronMonitorEvents){
-            tronMonitorEvent.call(transactionModel);
+            try {
+                tronMonitorEvent.call(transactionModel);
+            } catch (Exception e) {
+                logger.error("[ETH], An exception occurred in the call method of the listener", e);
+            }
         }
+    }
+
+    /**
+     * Get the latest block
+     * @param url
+     * @return
+     */
+    private TronBlockModel getBlock(String url) throws Exception {
+        String result = OkHttpUtil.postJson(url + TronConstants.GET_NOW_BLOCK, TronConstants.GET_NOW_BLOCK_PARAMETER);
+        return JSONUtil.toJavaObject(result, TronBlockModel.class);
+    }
+
+    /**
+     * Obtain block information at high speed according to the block
+     * @param url
+     * @param blockNumber
+     * @return
+     */
+    private TronBlockModel getBlockByNum(String url, BigInteger blockNumber) throws Exception {
+        Map<String, Object> parameter = new HashMap<>();
+        parameter.put("num", blockNumber);
+
+        String result = OkHttpUtil.postJson(url + TronConstants.GET_BLOCK_BY_NUM, parameter);
+        return JSONUtil.toJavaObject(result, TronBlockModel.class);
     }
 }

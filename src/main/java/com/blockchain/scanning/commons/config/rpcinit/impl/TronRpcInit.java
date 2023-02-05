@@ -1,7 +1,6 @@
 package com.blockchain.scanning.commons.config.rpcinit.impl;
 
 import com.blockchain.scanning.commons.config.rpcinit.RpcInit;
-import org.tron.trident.core.ApiWrapper;
 
 /**
  * Set the rpc address of tron
@@ -15,11 +14,11 @@ public class TronRpcInit extends RpcInit {
     /**
      * set node url
      *
-     * @param apiWrapper
+     * @param rpcUrl
      * @return
      */
-    public TronRpcInit addRpcUrl(ApiWrapper apiWrapper) throws Exception {
-        blockChainConfig.addApiWrappers(apiWrapper);
+    public TronRpcInit addRpcUrl(String rpcUrl) throws Exception {
+        blockChainConfig.addTronRpcUrls(rpcUrl);
         return this;
     }
 }

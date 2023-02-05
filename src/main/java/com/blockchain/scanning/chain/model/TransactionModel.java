@@ -1,5 +1,6 @@
 package com.blockchain.scanning.chain.model;
 
+import com.blockchain.scanning.chain.model.tron.TronTransactionModel;
 import org.web3j.protocol.core.methods.response.EthBlock;
 
 /**

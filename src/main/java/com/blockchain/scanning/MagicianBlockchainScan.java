@@ -68,7 +68,7 @@ public class MagicianBlockchainScan {
             // TODO In development.......
         } else if(rpcInit instanceof TronRpcInit){
             blockChainConfig.setChainType(ChainType.TRON);
-            blockChainConfig.setApiWrappers(rpcInit.getBlockChainConfig().getApiWrappers());
+            blockChainConfig.setTronRpcUrls(rpcInit.getBlockChainConfig().getTronRpcUrls());
         }
         rpcUrlExist = true;
         return this;

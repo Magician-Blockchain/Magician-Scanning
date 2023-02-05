@@ -11,6 +11,7 @@ import com.blockchain.scanning.commons.config.BlockChainConfig;
 import com.blockchain.scanning.commons.constant.TronConstants;
 import com.blockchain.scanning.commons.enums.BlockEnums;
 import com.blockchain.scanning.commons.util.JSONUtil;
+import com.blockchain.scanning.commons.util.StringUtil;
 import com.blockchain.scanning.commons.util.okhttp.OkHttpUtil;
 import com.blockchain.scanning.monitor.TronMonitorEvent;
 import org.slf4j.Logger;
@@ -137,6 +138,9 @@ public class TronChainScanner extends ChainScanner {
      */
     private TronBlockModel getBlock(String url) throws Exception {
         String result = OkHttpUtil.postJson(url + TronConstants.GET_NOW_BLOCK, TronConstants.GET_NOW_BLOCK_PARAMETER);
+        if(StringUtil.isEmpty(result)){
+            throw new Exception("An exception occurred when obtaining the latest block, result: null");
+        }
         return JSONUtil.toJavaObject(result, TronBlockModel.class);
     }
 
@@ -151,6 +155,9 @@ public class TronChainScanner extends ChainScanner {
         parameter.put("num", blockNumber);
 
         String result = OkHttpUtil.postJson(url + TronConstants.GET_BLOCK_BY_NUM, parameter);
+        if(StringUtil.isEmpty(result)){
+            throw new Exception("An exception occurred when querying blocks based on block height, result: null");
+        }
         return JSONUtil.toJavaObject(result, TronBlockModel.class);
     }
 }

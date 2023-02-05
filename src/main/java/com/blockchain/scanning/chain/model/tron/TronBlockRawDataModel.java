@@ -27,9 +27,6 @@ public class TronBlockRawDataModel {
     private Long timestamp;
 
     public BigInteger getNumber() {
-        if(number == null){
-            return BigInteger.ZERO;
-        }
         return number;
     }
 

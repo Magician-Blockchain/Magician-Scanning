@@ -5,6 +5,7 @@ import com.blockchain.scanning.biz.thread.RetryStrategyQueue;
 import com.blockchain.scanning.biz.thread.model.EventModel;
 import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.model.TransactionModel;
+import com.blockchain.scanning.chain.model.eth.EthTransactionModel;
 import com.blockchain.scanning.commons.codec.EthAbiCodec;
 import com.blockchain.scanning.commons.enums.BlockEnums;
 import com.blockchain.scanning.commons.util.StringUtil;
@@ -110,8 +111,12 @@ public class ETHChainScanner extends ChainScanner {
 
                 EthBlock.TransactionObject transactionObject = transactionResult.get();
 
-                transactionList.add(TransactionModel.builder()
-                        .setEthTransactionModel(transactionObject)
+                transactionList.add(
+                        TransactionModel.builder().setEthTransactionModel(
+                                EthTransactionModel.builder()
+                                        .setEthBlock(block)
+                                        .setTransactionObject(transactionObject)
+                        )
                 );
             }
 
@@ -133,12 +138,12 @@ public class ETHChainScanner extends ChainScanner {
      */
     @Override
     public void call(TransactionModel transactionModel) {
-        EthBlock.TransactionObject transactionObject = transactionModel.getEthTransactionModel();
+        EthBlock.TransactionObject transactionObject = transactionModel.getEthTransactionModel().getTransactionObject();
 
         for (EthMonitorEvent ethMonitorEvent : ethMonitorEventList) {
             try {
-                if (transactionModel.getEthTransactionModel().getValue() == null) {
-                    transactionModel.getEthTransactionModel().setValue("0");
+                if (transactionObject.getValue() == null) {
+                    transactionObject.setValue("0");
                 }
 
                 if (transactionObject.getInput() != null
@@ -164,12 +169,12 @@ public class ETHChainScanner extends ChainScanner {
                 }
 
                 if (ethMonitorFilter.getMinValue() != null
-                        && ethMonitorFilter.getMinValue().compareTo(transactionModel.getEthTransactionModel().getValue()) > 0) {
+                        && ethMonitorFilter.getMinValue().compareTo(transactionObject.getValue()) > 0) {
                     continue;
                 }
 
                 if (ethMonitorFilter.getMaxValue() != null
-                        && ethMonitorFilter.getMaxValue().compareTo(transactionModel.getEthTransactionModel().getValue()) < 0) {
+                        && ethMonitorFilter.getMaxValue().compareTo(transactionObject.getValue()) < 0) {
                     continue;
                 }
 

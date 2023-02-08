@@ -1,5 +1,6 @@
 package com.blockchain.scanning.chain.model;
 
+import com.blockchain.scanning.chain.model.eth.EthTransactionModel;
 import com.blockchain.scanning.chain.model.tron.TronTransactionModel;
 import org.web3j.protocol.core.methods.response.EthBlock;
 
@@ -11,7 +12,7 @@ public class TransactionModel {
     /**
      * Transaction objects on the Ethereum chain
      */
-    private EthBlock.TransactionObject ethTransactionModel;
+    private EthTransactionModel ethTransactionModel;
 
     /**
      * TransactionInfo on the Tron chain
@@ -24,11 +25,11 @@ public class TransactionModel {
         return new TransactionModel();
     }
 
-    public EthBlock.TransactionObject getEthTransactionModel() {
+    public EthTransactionModel getEthTransactionModel() {
         return ethTransactionModel;
     }
 
-    public TransactionModel setEthTransactionModel(EthBlock.TransactionObject ethTransactionModel) {
+    public TransactionModel setEthTransactionModel(EthTransactionModel ethTransactionModel) {
         this.ethTransactionModel = ethTransactionModel;
         return this;
     }

@@ -137,8 +137,8 @@ public class MagicianBlockchainScan {
             throw new Exception("ChainType cannot be empty");
         }
 
-        if (blockChainConfig.getScanPeriod() < 100) {
-            throw new Exception("scanPeriod must be greater than 100");
+        if (blockChainConfig.getScanPeriod() < 1) {
+            throw new Exception("scanPeriod must be greater than 1");
         }
 
         if (blockChainConfig.getChainType().equals(ChainType.ETH)

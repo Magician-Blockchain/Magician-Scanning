@@ -36,6 +36,11 @@ public abstract class ChainScanner {
     protected RetryStrategyQueue retryStrategyQueue;
 
     /**
+     * Business class for scanning blocks
+     */
+    protected ScanService scanService;
+
+    /**
      * Used to implement polling load balancing
      */
     private AtomicInteger atomicInteger;
@@ -71,7 +76,7 @@ public abstract class ChainScanner {
      * @param blockChainConfig
      * @param eventQueue
      */
-    public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue, RetryStrategyQueue retryStrategyQueue) {
+    public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue, RetryStrategyQueue retryStrategyQueue, ScanService scanService) {
         if(this.blockChainConfig == null){
             this.blockChainConfig = blockChainConfig;
         }
@@ -82,6 +87,10 @@ public abstract class ChainScanner {
 
         if(this.retryStrategyQueue == null){
             this.retryStrategyQueue = retryStrategyQueue;
+        }
+
+        if(this.scanService == null){
+            this.scanService = scanService;
         }
 
         this.atomicInteger = new AtomicInteger(0);

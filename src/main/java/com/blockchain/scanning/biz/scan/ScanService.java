@@ -6,6 +6,7 @@ import com.blockchain.scanning.chain.RetryStrategy;
 import com.blockchain.scanning.chain.factory.ChainScannerFactory;
 import com.blockchain.scanning.commons.config.BlockChainConfig;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -54,6 +55,11 @@ public class ScanService {
      */
     protected RetryStrategyQueue retryStrategyQueue;
 
+    /**
+     * The maximum block height that has been scanned so far
+     */
+    private BigInteger currentBlockHeight;
+
     public Timer getTimer() {
         return timer;
     }
@@ -64,6 +70,17 @@ public class ScanService {
 
     public RetryStrategyConsumer getRetryStrategyConsumer() {
         return retryStrategyConsumer;
+    }
+
+    public BigInteger getCurrentBlockHeight() {
+        if(currentBlockHeight == null){
+            return blockChainConfig.getBeginBlockNumber();
+        }
+        return currentBlockHeight;
+    }
+
+    public void setCurrentBlockHeight(BigInteger currentBlockHeight) {
+        this.currentBlockHeight = currentBlockHeight;
     }
 
     /**
@@ -80,7 +97,7 @@ public class ScanService {
             this.retryStrategyQueue = new RetryStrategyQueue();
         }
 
-        chainScanner.init(blockChainConfig, eventQueue, retryStrategyQueue);
+        chainScanner.init(blockChainConfig, eventQueue, retryStrategyQueue, this);
 
         eventConsumer = new EventConsumer(chainScanner, eventQueue);
         EventThreadPool.submit(eventConsumer);
@@ -89,6 +106,8 @@ public class ScanService {
             retryStrategyConsumer = new RetryStrategyConsumer(retryStrategyQueue, retryStrategy);
             EventThreadPool.submit(retryStrategyConsumer);
         }
+
+        EventThreadPool.incrementTaskNumber();
     }
 
     /**
@@ -103,5 +122,24 @@ public class ScanService {
                 chainScanner.scanStart();
             }
         }, new Date(), blockChainConfig.getScanPeriod());
+    }
+
+    public void shutdown(){
+        Timer timer = this.getTimer();
+        if (timer != null) {
+            timer.cancel();
+        }
+
+        EventConsumer eventConsumer = this.getEventConsumer();
+        if (eventConsumer != null) {
+            eventConsumer.setShutdown(true);
+        }
+
+        RetryStrategyConsumer retryStrategyConsumer = this.getRetryStrategyConsumer();
+        if (retryStrategyConsumer != null) {
+            retryStrategyConsumer.setShutdown(true);
+        }
+
+        EventThreadPool.shutdownTask();
     }
 }

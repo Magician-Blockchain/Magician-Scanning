@@ -1,8 +1,6 @@
 package com.blockchain.scanning;
 
-import com.blockchain.scanning.biz.thread.EventConsumer;
 import com.blockchain.scanning.biz.thread.EventThreadPool;
-import com.blockchain.scanning.biz.thread.RetryStrategyConsumer;
 import com.blockchain.scanning.chain.RetryStrategy;
 import com.blockchain.scanning.biz.scan.ScanService;
 import com.blockchain.scanning.commons.enums.ChainType;
@@ -17,7 +15,6 @@ import com.blockchain.scanning.monitor.TronMonitorEvent;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
 
 /**
  * Main class, used to create a block sweep task
@@ -42,12 +39,11 @@ public class MagicianBlockchainScan {
     /**
      * all scan job
      */
-    private static List<MagicianBlockchainScan> magicianBlockchainScans;
+    private static List<MagicianBlockchainScan> magicianBlockchainScans = new ArrayList<>();
 
     private MagicianBlockchainScan(){
         scanService = new ScanService();
         blockChainConfig = new BlockChainConfig();
-        magicianBlockchainScans = new ArrayList<>();
     }
 
     public static MagicianBlockchainScan create(){
@@ -101,6 +97,16 @@ public class MagicianBlockchainScan {
      */
     public MagicianBlockchainScan setBeginBlockNumber(BigInteger beginBlockNumber) {
         blockChainConfig.setBeginBlockNumber(beginBlockNumber);
+        return this;
+    }
+
+    /**
+     * Set the end block height of the scan
+     * @param endBlockNumber
+     * @return
+     */
+    public MagicianBlockchainScan setEndBlockNumber(BigInteger endBlockNumber) {
+        blockChainConfig.setEndBlockNumber(endBlockNumber);
         return this;
     }
 
@@ -170,20 +176,7 @@ public class MagicianBlockchainScan {
      * Stop the current scan job
      */
     public void shutdown() {
-        Timer timer = scanService.getTimer();
-        if (timer != null) {
-            timer.cancel();
-        }
-
-        EventConsumer eventConsumer = scanService.getEventConsumer();
-        if (eventConsumer != null) {
-            eventConsumer.setShutdown(true);
-        }
-
-        RetryStrategyConsumer retryStrategyConsumer = scanService.getRetryStrategyConsumer();
-        if (retryStrategyConsumer != null) {
-            retryStrategyConsumer.setShutdown(true);
-        }
+        scanService.shutdown();
     }
 
     /**
@@ -193,6 +186,17 @@ public class MagicianBlockchainScan {
         for(MagicianBlockchainScan magicianBlockchainScan : magicianBlockchainScans){
             magicianBlockchainScan.shutdown();
         }
+        magicianBlockchainScans.clear();
+        magicianBlockchainScans = null;
+
         EventThreadPool.shutdown();
+    }
+
+    /**
+     * Get current block height
+     * @return
+     */
+    public BigInteger getCurrentBlockHeight() {
+        return scanService.getCurrentBlockHeight();
     }
 }

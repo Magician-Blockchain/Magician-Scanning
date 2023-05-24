@@ -39,6 +39,11 @@ public class BlockChainConfig {
     private BigInteger beginBlockNumber = BigInteger.ONE;
 
     /**
+     * End block height of the scan
+     */
+    private BigInteger endBlockNumber = BigInteger.ZERO;
+
+    /**
      * Retry strategy
      */
     private RetryStrategy retryStrategy;
@@ -100,6 +105,17 @@ public class BlockChainConfig {
 
     public void setBeginBlockNumber(BigInteger beginBlockNumber) {
         this.beginBlockNumber = beginBlockNumber;
+    }
+
+    public BigInteger getEndBlockNumber() {
+        if(endBlockNumber == null){
+            return BigInteger.ZERO;
+        }
+        return endBlockNumber;
+    }
+
+    public void setEndBlockNumber(BigInteger endBlockNumber) {
+        this.endBlockNumber = endBlockNumber;
     }
 
     public RetryStrategy getRetryStrategy() {

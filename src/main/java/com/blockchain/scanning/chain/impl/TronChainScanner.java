@@ -1,5 +1,6 @@
 package com.blockchain.scanning.chain.impl;
 
+import com.blockchain.scanning.biz.scan.ScanService;
 import com.blockchain.scanning.biz.thread.EventQueue;
 import com.blockchain.scanning.biz.thread.RetryStrategyQueue;
 import com.blockchain.scanning.biz.thread.model.EventModel;
@@ -43,8 +44,8 @@ public class TronChainScanner extends ChainScanner {
     private List<TronMonitorEvent> tronMonitorEvents;
 
     @Override
-    public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue, RetryStrategyQueue retryStrategyQueue) {
-        super.init(blockChainConfig, eventQueue, retryStrategyQueue);
+    public void init(BlockChainConfig blockChainConfig, EventQueue eventQueue, RetryStrategyQueue retryStrategyQueue, ScanService scanService) {
+        super.init(blockChainConfig, eventQueue, retryStrategyQueue, scanService);
 
         this.tronRpcUrls = blockChainConfig.getTronRpcUrls();
         this.tronMonitorEvents = blockChainConfig.getEventConfig().getTronMonitorEvents();
@@ -62,8 +63,19 @@ public class TronChainScanner extends ChainScanner {
                 beginBlockNumber = lastBlockNumber;
             }
 
+            if(scanService.getCurrentBlockHeight() == null){
+                scanService.setCurrentBlockHeight(lastBlockNumber);
+            }
+
             if (beginBlockNumber.compareTo(lastBlockNumber) > 0) {
                 logger.info("[TRON], The block height on the chain has fallen behind the block scanning progress, pause scanning in progress ...... , scan progress [{}], latest block height on chain:[{}]", beginBlockNumber, lastBlockNumber);
+                return;
+            }
+
+            if(blockChainConfig.getEndBlockNumber().compareTo(BigInteger.ZERO) > 0
+                    && beginBlockNumber.compareTo(blockChainConfig.getEndBlockNumber()) >= 0){
+                logger.info("[TRON], The current block height has reached the stop block height you set, so the scan job has been automatically stopped , scan progress [{}], end block height on chain:[{}]", beginBlockNumber, blockChainConfig.getEndBlockNumber());
+                scanService.shutdown();
                 return;
             }
 
@@ -76,6 +88,7 @@ public class TronChainScanner extends ChainScanner {
                     //If the block is skipped, the retry strategy needs to be notified
                     addRetry(beginBlockNumber);
                 }
+                scanService.setCurrentBlockHeight(beginBlockNumber);
                 return;
             }
 
@@ -88,6 +101,7 @@ public class TronChainScanner extends ChainScanner {
                     //If the block is skipped, the retry strategy needs to be notified
                     addRetry(beginBlockNumber);
                 }
+                scanService.setCurrentBlockHeight(beginBlockNumber);
                 return;
             }
 
@@ -113,6 +127,7 @@ public class TronChainScanner extends ChainScanner {
 
             blockChainConfig.setBeginBlockNumber(beginBlockNumber.add(BigInteger.ONE));
 
+            scanService.setCurrentBlockHeight(beginBlockNumber);
         } catch (Exception e){
             logger.error("[TRON], An exception occurred while scanning, block height:[{}]", beginBlockNumber, e);
         }

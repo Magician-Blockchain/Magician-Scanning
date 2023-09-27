@@ -147,6 +147,10 @@ public class MagicianBlockchainScan {
             throw new Exception("scanPeriod must be greater than 1");
         }
 
+        if(blockChainConfig.getDelayed() < 0){
+            throw new Exception("delayed must be greater than 0");
+        }
+
         if (blockChainConfig.getChainType().equals(ChainType.ETH)
                 && (blockChainConfig.getEventConfig() == null
                 || blockChainConfig.getEventConfig().getEthMonitorEvent() == null

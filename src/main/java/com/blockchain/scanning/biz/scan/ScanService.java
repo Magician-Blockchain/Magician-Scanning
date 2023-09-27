@@ -5,6 +5,8 @@ import com.blockchain.scanning.chain.ChainScanner;
 import com.blockchain.scanning.chain.RetryStrategy;
 import com.blockchain.scanning.chain.factory.ChainScannerFactory;
 import com.blockchain.scanning.commons.config.BlockChainConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -15,6 +17,8 @@ import java.util.TimerTask;
  * Business class for scanning blocks
  */
 public class ScanService {
+
+    private Logger logger = LoggerFactory.getLogger(ScanService.class);
 
     /**
      * The main class used for scanning, there are currently 3 implementation classes, which can be extended in the future
@@ -121,7 +125,9 @@ public class ScanService {
             public void run() {
                 chainScanner.scanStart();
             }
-        }, new Date(), blockChainConfig.getScanPeriod());
+        }, new Date(System.currentTimeMillis() + blockChainConfig.getDelayed()), blockChainConfig.getScanPeriod());
+
+        logger.info("{} scanning task will start after {} milliseconds", blockChainConfig.getChainType().name(), blockChainConfig.getDelayed());
     }
 
     public void shutdown(){

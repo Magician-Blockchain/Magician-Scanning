@@ -34,6 +34,11 @@ public class BlockChainConfig {
     private long scanPeriod = 5000;
 
     /**
+     * delayed start
+     */
+    private long delayed = 0;
+
+    /**
      * Starting block height of the scan
      */
     private BigInteger beginBlockNumber = BigInteger.ONE;
@@ -97,6 +102,14 @@ public class BlockChainConfig {
 
     public void setScanPeriod(long scanPeriod) {
         this.scanPeriod = scanPeriod;
+    }
+
+    public long getDelayed() {
+        return delayed;
+    }
+
+    public void setDelayed(long delayed) {
+        this.delayed = delayed;
     }
 
     public BigInteger getBeginBlockNumber() {

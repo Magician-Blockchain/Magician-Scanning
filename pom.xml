@@ -6,7 +6,7 @@
 
     <groupId>com.github.yuyenews</groupId>
     <artifactId>Magician-Scanning</artifactId>
-    <version>1.0.12</version>
+    <version>1.0.13</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
